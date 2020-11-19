@@ -10,6 +10,7 @@
  */
 #include <rtthread.h>
 #include <rthw.h>
+#include <rtdevice.h>
 #include <nrfx_systick.h>
 
 #include "board.h"
@@ -90,4 +91,33 @@ void rt_hw_board_init(void)
 #endif
 
 }
+//struct rt_device led_driver;
+
+static struct rt_device_pin led_device;
+#define DK_BOARD_LED_1  13
+#define DK_BOARD_LED_2  14
+
+rt_err_t  led_init(rt_device_t dev)
+{
+    rt_pin_mode(DK_BOARD_LED_1, PIN_MODE_OUTPUT);
+    return RT_EOK;
+}
+
+rt_size_t led_write(rt_device_t dev, rt_off_t pos, const void *buffer, rt_size_t size)
+{
+    rt_pin_write(DK_BOARD_LED_1, *((uint8_t *)buffer));
+    return 1;
+}
+
+void rt_bsp_board_init(void)
+{
+     rt_memset(&led_device,0,sizeof(struct rt_device_pin));
+     led_device.parent.type = RT_Device_Class_Miscellaneous;
+     led_device.parent.init = led_init;
+     led_device.parent.write = led_write;
+     rt_device_register(&led_device.parent, "led1", RT_DEVICE_FLAG_RDWR);
+     rt_kprintf("\r\n using softdevice the RAM \r\n");
+    
+}
+INIT_PREV_EXPORT(rt_bsp_board_init);
 
