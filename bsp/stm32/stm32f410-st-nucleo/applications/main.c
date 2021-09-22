@@ -9,7 +9,7 @@
  */
 
 #include <rtthread.h>
-#include <rtdevice.h>
+#include <stm32f4xx.h>
 #include <board.h>
 
 /* defined the LED0 pin: PA5 */
@@ -17,14 +17,16 @@
 
 int main(void)
 {
+    __HAL_RCC_GPIOA_CLK_ENABLE();
     /* set LED0 pin mode to output */
-    rt_pin_mode(LED0_PIN, PIN_MODE_OUTPUT);
-
+    //rt_pin_mode(LED0_PIN, PIN_MODE_OUTPUT);
+    GPIOA->OSPEEDR = 0x0C000800;
+    GPIOA->MODER = 0xA8000400;
     while (1)
     {
-        rt_pin_write(LED0_PIN, PIN_HIGH);
+        GPIOA->BSRR = 1<<5;
         rt_thread_mdelay(500);
-        rt_pin_write(LED0_PIN, PIN_LOW);
+        GPIOA->BSRR = (1<<5)<<16;
         rt_thread_mdelay(500);
     }
 }

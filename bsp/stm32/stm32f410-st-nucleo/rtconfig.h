@@ -23,13 +23,11 @@
 
 /* Memory Management */
 
-#define RT_USING_MEMPOOL
 #define RT_USING_SMALL_MEM
 #define RT_USING_HEAP
 
 /* Kernel Device Object */
 
-#define RT_USING_DEVICE
 #define RT_VER_NUM 0x40004
 #define ARCH_ARM
 #define RT_USING_CPU_FFS
@@ -54,9 +52,6 @@
 
 /* Device Drivers */
 
-#define RT_USING_DEVICE_IPC
-#define RT_PIPE_BUFSZ 512
-#define RT_USING_PIN
 
 /* Using USB */
 
@@ -147,7 +142,6 @@
 
 /* On-chip Peripheral Drivers */
 
-#define BSP_USING_GPIO
 
 /* Board extended module Drivers */
 
