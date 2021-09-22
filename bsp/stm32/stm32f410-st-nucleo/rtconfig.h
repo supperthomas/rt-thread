@@ -30,9 +30,6 @@
 /* Kernel Device Object */
 
 #define RT_USING_DEVICE
-#define RT_USING_CONSOLE
-#define RT_CONSOLEBUF_SIZE 128
-#define RT_CONSOLE_DEVICE_NAME "uart2"
 #define RT_VER_NUM 0x40004
 #define ARCH_ARM
 #define RT_USING_CPU_FFS
@@ -51,19 +48,6 @@
 
 /* Command shell */
 
-#define RT_USING_FINSH
-#define RT_USING_MSH
-#define FINSH_USING_MSH
-#define FINSH_THREAD_NAME "tshell"
-#define FINSH_THREAD_PRIORITY 20
-#define FINSH_THREAD_STACK_SIZE 4096
-#define FINSH_USING_HISTORY
-#define FINSH_HISTORY_LINES 5
-#define FINSH_USING_SYMTAB
-#define FINSH_CMD_SIZE 80
-#define MSH_USING_BUILT_IN_COMMANDS
-#define FINSH_USING_DESCRIPTION
-#define FINSH_ARG_MAX 10
 
 /* Device virtual file system */
 
@@ -72,9 +56,6 @@
 
 #define RT_USING_DEVICE_IPC
 #define RT_PIPE_BUFSZ 512
-#define RT_USING_SERIAL
-#define RT_USING_SERIAL_V1
-#define RT_SERIAL_RB_BUFSZ 64
 #define RT_USING_PIN
 
 /* Using USB */
@@ -167,8 +148,6 @@
 /* On-chip Peripheral Drivers */
 
 #define BSP_USING_GPIO
-#define BSP_USING_UART
-#define BSP_USING_UART2
 
 /* Board extended module Drivers */
 
