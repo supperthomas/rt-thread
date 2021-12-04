@@ -20,7 +20,7 @@ int main(void)
 
     while (count++)
     {
-        rt_pin_write(RT_BSP_LED_PIN, PIN_HIGH);
+        rt_pin_write(1, PIN_HIGH);
         rt_thread_mdelay(500);
 
         rt_pin_write(RT_BSP_LED_PIN, PIN_LOW);
