@@ -16,7 +16,7 @@
 int main(void)
 {
     int count = 1;
-    rt_pin_mode(RT_BSP_LED_PIN, PIN_MODE_OUTPUT);
+    rt_pin_mode(1, PIN_MODE_OUTPUT);
 
     while (count++)
     {
