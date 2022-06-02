@@ -1,4 +1,4 @@
-idf_component_register(SRCS "main.c"
+idf_component_register(SRCS "board.c" "main.c"
                     "drv_gpio.c"
                     "../../../libcpu/risc-v/common/cpuport.c"
                     "../../../libcpu/risc-v/common/context_gcc.S"
@@ -35,6 +35,6 @@ idf_component_register(SRCS "main.c"
 ADD_DEFINITIONS(
 	-D__RTTHREAD__
 )
-
-list(APPEND LINK_FLAGS "-u __rt_init_desc_rt_hw_pin_init")
-set(compile_options "-u __rt_init_desc_rt_hw_pin_init")
+#TODO
+#list(APPEND LINK_FLAGS "-u __rt_init_desc_rt_hw_pin_init")
+#set(compile_options "-u __rt_init_desc_rt_hw_pin_init")

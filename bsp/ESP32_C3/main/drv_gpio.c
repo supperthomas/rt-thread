@@ -20,14 +20,12 @@
 
 static void mcu_pin_write(rt_device_t dev, rt_base_t pin, rt_base_t value)
 {
-      printf("\r\n=====%s===%d==== \r\n ",__func__,__LINE__);
       gpio_set_level(pin, value);
       /*TODO:set gpio out put mode */
 }
 
 static int mcu_pin_read(rt_device_t dev, rt_base_t pin)
 {
-    printf("\r\n=====%s===%d==== \r\n ",__func__,__LINE__);
     int value;
     value = gpio_get_level(pin);
     return value;
@@ -45,7 +43,6 @@ static gpio_config_t init_io(gpio_num_t num)
 
 static void mcu_pin_mode(rt_device_t dev, rt_base_t pin, rt_base_t mode)
 {
-    printf("\r\n=====%s===%d==== \r\n ",__func__,__LINE__);
     gpio_config_t io_conf;
     io_conf.intr_type = GPIO_INTR_DISABLE;
     io_conf.mode = GPIO_MODE_OUTPUT;
@@ -65,14 +62,13 @@ static void mcu_pin_mode(rt_device_t dev, rt_base_t pin, rt_base_t mode)
 static rt_err_t mcu_pin_attach_irq(struct rt_device *device, rt_int32_t pin,
                                    rt_uint32_t irq_mode, void (*hdr)(void *args), void *args)
 {
-   printf("\r\n=====%s===%d==== \r\n ",__func__,__LINE__);
+
     /*TODO: start irq handle */
     return RT_EOK;
 }
 
 static rt_err_t mcu_pin_dettach_irq(struct rt_device *device, rt_int32_t pin)
 {
-   printf("\r\n=====%s===%d==== \r\n ",__func__,__LINE__);
     /*TODO:disable gpio irq handle */
     return RT_EOK;
 }
@@ -80,7 +76,6 @@ static rt_err_t mcu_pin_dettach_irq(struct rt_device *device, rt_int32_t pin)
 static rt_err_t mcu_pin_irq_enable(struct rt_device *device, rt_base_t pin,
                                    rt_uint32_t enabled)
 {
-   printf("\r\n=====%s===%d==== \r\n ",__func__,__LINE__);
      /*TODO:start irq handle */
     return RT_EOK;
 }
@@ -98,7 +93,6 @@ const static struct rt_pin_ops _mcu_pin_ops =
 
 int rt_hw_pin_init(void)
 {
-    printf("\r\n=====%s===%d==== \r\n ",__func__,__LINE__);
     /*TODO: INIT THE GPIO CLOCK AND OTHER */
     return rt_device_pin_register("pin", &_mcu_pin_ops, RT_NULL);
 }
