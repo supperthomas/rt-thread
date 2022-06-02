@@ -25,6 +25,16 @@ extern "C"
 {
 #endif
 
+#if defined(BSP_USING_UART1)
+#ifndef UART1_CONFIG
+#define UART1_CONFIG                                                \
+    {                                                               \
+        .name = "uart1"                                            \
+    }
+#endif /* UART1_CONFIG */
+#endif /* BSP_USING_UART1 */
+
+
 int mcu_hw_uart_init(void);
 
 #ifdef __cplusplus
