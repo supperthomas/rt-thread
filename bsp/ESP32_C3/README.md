@@ -14,7 +14,7 @@
 
 ## 开发板介绍
 
-目前测试了两款开发板，运行都正常，由于两款开发板LED小灯引脚不同，请根据自己开发板修改GPIO引脚，目前默认使用的开发板是LUATOS_ESP32C3。已测开发板外观如下图所示：
+目前测试了两款开发板，运行都正常，由于两款开发板LED小灯引脚不同，请根据自己开发板修改GPIO引脚，目前默认使用的开发板是LUATOS_ESP32C3 `GPIO 12` (HX 开发板引脚是`GPIO 8`)。已测开发板外观如下图所示：
 
 - [LUATOS_ESP32C3](https://wiki.luatos.com/chips/esp32c3/board.html)
 

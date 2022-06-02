@@ -14,7 +14,7 @@
 
 int rtt_main(void)
 {
-#define BLINK_GPIO 8
+#define BLINK_GPIO 12
     rt_pin_mode(BLINK_GPIO, PIN_MODE_OUTPUT);
     while (1)
     {

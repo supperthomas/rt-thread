@@ -1,4 +1,4 @@
-idf_component_register(SRCS "board.c" "main.c"
+idf_component_register(SRCS "drv_uart.c" "board.c" "main.c"
                     "drv_gpio.c"
                     "../../../libcpu/risc-v/common/cpuport.c"
                     "../../../libcpu/risc-v/common/context_gcc.S"
@@ -24,6 +24,10 @@ idf_component_register(SRCS "board.c" "main.c"
                     "../../../components/drivers/ipc/dataqueue.c"
                     "../../../components/drivers/ipc/ringbuffer.c"
                     "../../../components/drivers/ipc/workqueue.c"
+
+
+                    "../../../components/drivers/serial/serial.c"
+
                     INCLUDE_DIRS 
                     "../../../components/drivers/include/drivers"
 

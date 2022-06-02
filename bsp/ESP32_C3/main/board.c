@@ -21,6 +21,7 @@
 #include "rtthread.h"
 #include "rthw.h"
 #include "drv_gpio.h"
+#include "drv_uart.h"
 
 #define rt_kprintf printf
 
@@ -229,6 +230,7 @@ static void rtthread_startup(void)
     rt_system_scheduler_start();
     /* init scheduler system */
     rt_hw_pin_init();
+    mcu_hw_uart_init();
     /* never reach here */
     return ;
 }
@@ -238,5 +240,4 @@ void app_main(void)
     /* startup RT-Thread RTOS */
     rtthread_startup();
     return;
-
 }

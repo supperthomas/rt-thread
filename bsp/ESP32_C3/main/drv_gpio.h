@@ -12,9 +12,9 @@
 #ifndef __DRV_GPIO_H__
 #define __DRV_GPIO_H__
 
-//#include "rtconfig.h"
 #include <rtthread.h>
 #include <rthw.h>
+
 #ifdef RT_USING_DEVICE
 #include <rtdevice.h>
 #endif
