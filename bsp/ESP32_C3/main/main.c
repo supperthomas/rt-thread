@@ -8,8 +8,6 @@
  * 2022-04-24     supperthomas first version
  */
 #include <stdio.h>
-#include "driver/gpio.h"
-
 
 #include "esp_private/panic_internal.h"
 #include "hal/uart_hal.h"
@@ -21,21 +19,128 @@
 
 #include "rtthread.h"
 #include "rthw.h"
+#include "drv_gpio.h"
+
+
+#ifdef RT_USING_COMPONENTS_INIT
+/*
+ * Components Initialization will initialize some driver and components as following
+ * order:
+ * rti_start         --> 0
+ * BOARD_EXPORT      --> 1
+ * rti_board_end     --> 1.end
+ *
+ * DEVICE_EXPORT     --> 2
+ * COMPONENT_EXPORT  --> 3
+ * FS_EXPORT         --> 4
+ * ENV_EXPORT        --> 5
+ * APP_EXPORT        --> 6
+ *
+ * rti_end           --> 6.end
+ *
+ * These automatically initialization, the driver or component initial function must
+ * be defined with:
+ * INIT_BOARD_EXPORT(fn);
+ * INIT_DEVICE_EXPORT(fn);
+ * ...
+ * INIT_APP_EXPORT(fn);
+ * etc.
+ */
+static int rti_start(void)
+{
+    return 0;
+}
+INIT_EXPORT(rti_start, "0");
+
+static int rti_board_start(void)
+{
+    return 0;
+}
+INIT_EXPORT(rti_board_start, "0.end");
+
+static int rti_board_end(void)
+{
+    return 0;
+}
+INIT_EXPORT(rti_board_end, "1.end");
+
+static int rti_end(void)
+{
+    return 0;
+}
+INIT_EXPORT(rti_end, "6.end");
+
+/**
+ * @brief  Onboard components initialization. In this function, the board-level
+ *         initialization function will be called to complete the initialization
+ *         of the on-board peripherals.
+ */
+void rt_components_board_init(void)
+{
+#if RT_DEBUG_INIT
+    int result;
+    const struct rt_init_desc *desc;
+    for (desc = &__rt_init_desc_rti_board_start; desc < &__rt_init_desc_rti_board_end; desc ++)
+    {
+        rt_kprintf("rt_components_board_init initialize %s", desc->fn_name);
+        result = desc->fn();
+        rt_kprintf(":%d done\n", result);
+    }
+#else
+    volatile const init_fn_t *fn_ptr;
+
+    for (fn_ptr = &__rt_init_rti_board_start; fn_ptr < &__rt_init_rti_board_end; fn_ptr++)
+    {
+        (*fn_ptr)();
+    }
+#endif /* RT_DEBUG_INIT */
+}
+
+/**
+ * @brief  RT-Thread Components Initialization.
+ */
+void rt_components_init(void)
+{
+#if RT_DEBUG_INIT
+    int result;
+    const struct rt_init_desc *desc;
+
+    printf("do components initialization.\n");
+    for (desc = &__rt_init_desc_rti_board_end; desc < &__rt_init_desc_rti_end; desc ++)
+    {
+        printf("rt_components_init initialize %s", desc->fn_name);
+        result = desc->fn();
+        printf(":%d done\n", result);
+    }
+#else
+    volatile const init_fn_t *fn_ptr;
+
+    for (fn_ptr = &__rt_init_rti_board_end; fn_ptr < &__rt_init_rti_end; fn_ptr ++)
+    {
+        (*fn_ptr)();
+    }
+#endif /* RT_DEBUG_INIT */
+}
+#endif /* RT_USING_COMPONENTS_INIT */
 
 
 void main_thread_entry(void *parameter)
 {
-#define BLINK_GPIO 12
-    gpio_reset_pin(BLINK_GPIO);
-    gpio_set_direction(BLINK_GPIO, GPIO_MODE_OUTPUT);
+#ifdef RT_USING_COMPONENTS_INIT
+    /* RT-Thread components initialization */
+    rt_components_init();
+#endif /* RT_USING_COMPONENTS_INIT */
+#define BLINK_GPIO 8
+    rt_pin_mode(BLINK_GPIO, PIN_MODE_OUTPUT);
     while (1)
     {
-        gpio_set_level(BLINK_GPIO, 1);
+        rt_pin_write(BLINK_GPIO, PIN_HIGH);
         rt_thread_mdelay(1000);
-        gpio_set_level(BLINK_GPIO, 0);
+        rt_pin_write(BLINK_GPIO, PIN_LOW);
         rt_thread_mdelay(1000);
     }
 }
+
 void rt_application_init(void)
 {
     rt_thread_t tid;
@@ -85,12 +190,16 @@ void rt_hw_systick_init(void)
 void rt_hw_board_init(void)
 {
     rt_hw_systick_init();
-
+#if defined(RT_USING_HEAP)
     extern int __heap_start__;
     extern int __heap_end__;
     printf("%s:%d__heap_start__:%p,__heap_end__:%p\n",__func__,__LINE__,&__heap_start__,&__heap_end__);
     rt_system_heap_init((void *)&__heap_start__, (void *)&__heap_end__);
-
+#endif
+    /* Board underlying hardware initialization */
+#ifdef RT_USING_COMPONENTS_INIT
+    rt_components_board_init();
+#endif
 }
 
 static void rtthread_startup(void)
@@ -119,7 +228,7 @@ static void rtthread_startup(void)
     /* start scheduler */
     rt_system_scheduler_start();
     /* init scheduler system */
-
+    rt_hw_pin_init();
     /* never reach here */
     return ;
 }

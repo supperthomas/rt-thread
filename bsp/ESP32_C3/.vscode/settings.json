@@ -4,8 +4,8 @@
   "idf.openOcdConfigs": [
     "board/esp32c3-builtin.cfg"
   ],
-  "idf.portWin": "COM7",
-  "idf.flashType": "UART",
+  "idf.portWin": "COM4",
+  "idf.flashType": "JTAG",
   "files.associations": {
     "panic_internal.h": "c",
     "rtthread.h": "c",
@@ -20,7 +20,9 @@
     "rthw.h": "c",
     "typeinfo": "c",
     "serial.h": "c",
-    "timer.h": "c"
+    "timer.h": "c",
+    "drv_gpio.h": "c",
+    "rtdevice.h": "c"
   },
   "RTT_Studio.Build.Parallel_Jobs": "4"
 }
