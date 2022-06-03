@@ -74,13 +74,19 @@ static int mcu_putc(struct rt_serial_device *serial, char c)
     return 1;
 }
 
+uint8_t rx_data[128];
 static int mcu_getc(struct rt_serial_device *serial)
 {
-    printf("\r\n=====%s===%d==== \r\n ",__func__,__LINE__);
+    int rx_fifo_len=1;
     int ch= -1;
+       printf("\r\n=====%s===%d=== \r\n ",__func__,__LINE__);
+	if (uart_hal_get_rxfifo_len(&s_send_uart) == 0) {
+		return -1;
+	}
+    uart_hal_read_rxfifo(&s_send_uart,&ch,&rx_fifo_len);
+    printf("\r\n=====%s===%d==ch:%c=rx_fifo_len:%d= \r\n ",__func__,__LINE__,ch,rx_fifo_len);
     return ch;
 }
-
 
 
 static const struct rt_uart_ops mcu_uart_ops =
