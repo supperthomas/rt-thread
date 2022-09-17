@@ -72,5 +72,6 @@ jobs:
         run: |
           source ~/.env/env.sh
           scons --menuconfig -C bsp/$RTT_BSP
+          cat bsp/$RTT_BSP/.config
           pushd bsp/$RTT_BSP && pkgs --update && popd
           scons -C bsp/$RTT_BSP
