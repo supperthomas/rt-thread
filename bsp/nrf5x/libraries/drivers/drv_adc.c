@@ -213,6 +213,7 @@ int rt_hw_adc_init(void)
             result = -RT_ERROR;
         }
     }
+	
     return result;
 }
 INIT_BOARD_EXPORT(rt_hw_adc_init);

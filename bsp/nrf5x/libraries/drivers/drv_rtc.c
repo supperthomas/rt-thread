@@ -30,7 +30,7 @@
 #endif
 
 #ifndef RTC_INSTANCE_ID
-#define RTC_INSTANCE_ID (2)
+#define RTC_INSTANCE_ID (1)
 #endif
 
 #define TICK_FREQUENCE_HZ        (RT_TICK_PER_SECOND)     // RTC tick frequence, in HZ
@@ -112,7 +112,7 @@ const static struct rt_device_ops rtc_ops =
 };
 #endif
 
-static rt_err_t rt_hw_rtc_register(rt_device_t device, const char *name, rt_uint32_t flag)
+static rt_err_t rt_hw_rtc_register1(rt_device_t device, const char *name, rt_uint32_t flag)
 {
     struct tm time_new = ONCHIP_RTC_TIME_DEFAULT;
 
@@ -147,13 +147,13 @@ static rt_err_t rt_hw_rtc_register(rt_device_t device, const char *name, rt_uint
 int rt_hw_rtc_init(void)
 {
     rt_err_t result;
-    result = rt_hw_rtc_register(&rtc, "rtc", RT_DEVICE_FLAG_RDWR);
+    result = rt_hw_rtc_register1(&rtc, "rtc", RT_DEVICE_FLAG_RDWR);
     if (result != RT_EOK)
     {
         LOG_E("rtc register err code: %d", result);
         return result;
     }
-    LOG_D("rtc init success");
+    rt_kprintf("rtc init success\r");
     return RT_EOK;
 }
 INIT_DEVICE_EXPORT(rt_hw_rtc_init);

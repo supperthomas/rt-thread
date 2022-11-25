@@ -9,10 +9,14 @@
  *
  */
 #include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
 #include "board.h"
 #include "nrfx_qspi.h"
-#if defined(RT_USING_FAL)
-#include <fal.h>
+#if defined(PKG_USING_FAL)
+//#include <fal.h>
 
 //log
 #include <rtdbg.h>
@@ -24,6 +28,10 @@
     } while (0)
 
 static volatile bool m_finished = false;
+
+
+
+
 static void qspi_handler(nrfx_qspi_evt_t event, void *p_context)
 {
     m_finished = true;
@@ -76,8 +84,8 @@ static void configure_memory()
 static int init(void)
 {
     uint32_t err_code;
-    nrfx_qspi_config_t config = NRFX_QSPI_DEFAULT_CONFIG(BSP_QSPI_SCK_PIN, BSP_QSPI_CSN_PIN,
-                                                         BSP_QSPI_IO0_PIN, BSP_QSPI_IO1_PIN, BSP_QSPI_IO2_PIN, BSP_QSPI_IO3_PIN);
+    nrfx_qspi_config_t config = NRFX_QSPI_DEFAULT_CONFIG(17, 18,13,14,15,16);
+                                                         
 
     err_code = nrfx_qspi_init(&config, qspi_handler, NULL);
     if (NRFX_SUCCESS != err_code)
@@ -139,7 +147,17 @@ static int erase(long offset, size_t size)
         return -1;
     }
 }
+int rt_qspi_init(void)
+{
 
+
+	if(init()==-1)
+		{return -1;}
+    return 0;
+}
+
+INIT_BOARD_EXPORT(rt_qspi_init);
+#if 0
 struct fal_flash_dev nor_flash0 =
 {
     .name       = NOR_FLASH_DEV_NAME,
@@ -149,5 +167,64 @@ struct fal_flash_dev nor_flash0 =
     .ops        = {init, read, write, erase},
     .write_gran = 1
 };
+#endif
+#define QSPI_TEST_DATA_SIZE 256
+
+static uint8_t m_buffer_tx[QSPI_TEST_DATA_SIZE];
+static uint8_t m_buffer_rx[QSPI_TEST_DATA_SIZE];
+void qspi_sample(void)
+{
+    uint32_t i;
+    uint32_t err_code;
+    uint32_t f=0;
+	uint32_t g=0;
+
+   // rt_kprintf("QSPI write and read example");
+
+    srand(1);
+    for (i = 0; i < QSPI_TEST_DATA_SIZE; ++i)
+    {
+        m_buffer_tx[i] = (uint8_t)rand();
+    }
+
+    //err_code=init();
+	//if(err_code==-1)
+	//	{return;}
+    //rt_kprintf("QSPI example started.");
+
+    configure_memory();
+
+ err_code=erase(0,0);
+ if(err_code==-1)
+		{return;}
+    //rt_kprintf(" erasing ");
+
+     err_code=write(0,m_buffer_tx, QSPI_TEST_DATA_SIZE);
+ if(err_code==-1)
+		{return;}
+
+
+   // rt_kprintf("Process of writing");
+
+     err_code=read(0,m_buffer_rx, QSPI_TEST_DATA_SIZE);
+   if(err_code==-1)
+		{return;}
+   // rt_kprintf("Data read");
+
+   // rt_kprintf("Compare...");
+    if (memcmp(m_buffer_tx, m_buffer_rx, QSPI_TEST_DATA_SIZE) == 0)
+    {
+        rt_kprintf("ok\n");
+       f++;
+    }
+    else
+    {
+        rt_kprintf("err\n");
+       g++;
+    }
+
+   
+}
+MSH_CMD_EXPORT(qspi_sample, qspi sample);
 
 #endif

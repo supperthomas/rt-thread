@@ -20,7 +20,7 @@
 
 #ifdef BSP_USING_SPI
 
-#if defined(BSP_USING_SPI0) || defined(BSP_USING_SPI1) || defined(BSP_USING_SPI2)
+#if defined(BSP_USING_SPI0) || defined(BSP_USING_SPI1) || defined(BSP_USING_SPI2) || defined(BSP_USING_SPI3) || defined(BSP_USING_SPI4)
 static struct nrfx_drv_spi_config spi_config[] =
 {
 #ifdef BSP_USING_SPI0
@@ -34,6 +34,15 @@ static struct nrfx_drv_spi_config spi_config[] =
 #ifdef BSP_USING_SPI2
     NRFX_SPI2_CONFIG,
 #endif
+
+#ifdef BSP_USING_SPI3
+    NRFX_SPI3_CONFIG,
+#endif
+
+#ifdef BSP_USING_SPI4
+    NRFX_SPI4_CONFIG,
+#endif
+
 
 };
 
@@ -68,6 +77,25 @@ static struct nrfx_drv_spi_pin_config bsp_spi_pin[] =
         .ss_pin = BSP_SPI2_SS_PIN
     },
 #endif
+
+#ifdef BSP_USING_SPI3
+        .sck_pin = BSP_SPI3_SCK_PIN,
+        .mosi_pin = BSP_SPI3_MOSI_PIN,
+        .miso_pin = BSP_SPI3_MISO_PIN,
+        .ss_pin = BSP_SPI3_SS_PIN
+    },
+#endif
+
+#ifdef BSP_USING_SPI4
+    {
+        .sck_pin = BSP_SPI4_SCK_PIN,
+        .mosi_pin = BSP_SPI4_MOSI_PIN,
+        .miso_pin = BSP_SPI4_MISO_PIN,
+        .ss_pin = BSP_SPI4_SS_PIN
+    },
+#endif
+
+
 };
 
 
@@ -84,21 +112,31 @@ static rt_uint8_t spi_index_find(struct rt_spi_bus *spi_bus)
 /**
  * spi event handler function
  */
-static void spi0_handler(const nrfx_spi_evt_t *p_event, void *p_context)
+static void spi0_handler(const nrfx_spim_evt_t *p_event, void *p_context)
 {
     LOG_I("\nspi0_handler");
 }
 
-static void spi1_handler(const nrfx_spi_evt_t *p_event, void *p_context)
+static void spi1_handler(const nrfx_spim_evt_t *p_event, void *p_context)
 {
     LOG_I("\nspi1_handler");
 }
 
-static void spi2_handler(const nrfx_spi_evt_t *p_event, void *p_context)
+static void spi2_handler(const nrfx_spim_evt_t *p_event, void *p_context)
 {
     LOG_I("\nspi2_handler");
 }
-nrfx_spi_evt_handler_t spi_handler[] = {spi0_handler, spi1_handler, spi2_handler};
+static void spi3_handler(const nrfx_spim_evt_t *p_event, void *p_context)
+{
+    LOG_I("\nspi3_handler");
+}
+static void spi4_handler(const nrfx_spim_evt_t *p_event, void *p_context)
+{
+    LOG_I("\nspi4_handler");
+}
+
+
+nrfx_spim_evt_handler_t spi_handler[] = {spi0_handler, spi1_handler, spi2_handler ,spi3_handler,spi4_handler};
 
 /**
   * @brief  This function config spi bus
@@ -117,9 +155,9 @@ static rt_err_t spi_configure(struct rt_spi_device *device,
     rt_uint8_t index = spi_index_find(device->bus);
     RT_ASSERT(index != 0xFF);
 
-    nrfx_spi_t spi = spi_bus_obj[index].spi;
-    nrfx_spi_config_t config = NRFX_SPI_DEFAULT_CONFIG(bsp_spi_pin[index].sck_pin,
-        bsp_spi_pin[index].mosi_pin, bsp_spi_pin[index].miso_pin, NRFX_SPI_PIN_NOT_USED);
+    nrfx_spim_t spi = spi_bus_obj[index].spi;
+    nrfx_spim_config_t config = NRFX_SPIM_DEFAULT_CONFIG(bsp_spi_pin[index].sck_pin,
+        bsp_spi_pin[index].mosi_pin, bsp_spi_pin[index].miso_pin, NRFX_SPIM_PIN_NOT_USED);
 
     /* spi config ss pin */
     if(device->parent.user_data != RT_NULL)
@@ -129,26 +167,26 @@ static rt_err_t spi_configure(struct rt_spi_device *device,
     /* spi config bit order */
     if(configuration->mode & RT_SPI_MSB)
     {
-        config.bit_order = NRF_SPI_BIT_ORDER_MSB_FIRST;
+        config.bit_order = NRF_SPIM_BIT_ORDER_MSB_FIRST;
     }
     else
     {
-        config.bit_order = NRF_SPI_BIT_ORDER_LSB_FIRST;
+        config.bit_order = NRF_SPIM_BIT_ORDER_LSB_FIRST;
     }
     /* spi mode config */
     switch (configuration->mode & RT_SPI_MODE_3 )
     {
     case RT_SPI_MODE_0/* RT_SPI_CPOL:0 , RT_SPI_CPHA:0 */:
-        config.mode = NRF_SPI_MODE_0;
+        config.mode = NRF_SPIM_MODE_0;
         break;
     case RT_SPI_MODE_1/* RT_SPI_CPOL:0 , RT_SPI_CPHA:1 */:
-        config.mode = NRF_SPI_MODE_1;
+        config.mode = NRF_SPIM_MODE_1;
         break;
     case RT_SPI_MODE_2/* RT_SPI_CPOL:1 , RT_SPI_CPHA:0 */:
-        config.mode = NRF_SPI_MODE_2;
+        config.mode = NRF_SPIM_MODE_2;
         break;
     case RT_SPI_MODE_3/* RT_SPI_CPOL:1 , RT_SPI_CPHA:1 */:
-        config.mode = NRF_SPI_MODE_3;
+        config.mode = NRF_SPIM_MODE_3;
         break;
     default:
         LOG_E("spi_configure mode error %x\n",configuration->mode);
@@ -158,35 +196,35 @@ static rt_err_t spi_configure(struct rt_spi_device *device,
     switch (configuration->max_hz / 1000)
     {
     case 125:
-        config.frequency = NRF_SPI_FREQ_125K;
+        config.frequency = NRF_SPIM_FREQ_125K;
         break;
     case 250:
-        config.frequency = NRF_SPI_FREQ_250K;
+        config.frequency = NRF_SPIM_FREQ_250K;
         break;
     case 500:
-        config.frequency = NRF_SPI_FREQ_500K;
+        config.frequency = NRF_SPIM_FREQ_500K;
         break;
     case 1000:
-        config.frequency = NRF_SPI_FREQ_1M;
+        config.frequency = NRF_SPIM_FREQ_1M;
         break;
     case 2000:
-        config.frequency = NRF_SPI_FREQ_2M;
+        config.frequency = NRF_SPIM_FREQ_2M;
         break;
     case 4000:
-        config.frequency = NRF_SPI_FREQ_4M;
+        config.frequency = NRF_SPIM_FREQ_4M;
         break;
     case 8000:
-        config.frequency = NRF_SPI_FREQ_8M;
+        config.frequency = NRF_SPIM_FREQ_8M;
         break;
     default:
         LOG_E("spi_configure rate error %d\n",configuration->max_hz);
         break;
     }
 
-    rt_memcpy((void*)&spi_bus_obj[index].spi_config, (void*)&config, sizeof(nrfx_spi_config_t));
-    nrfx_spi_evt_handler_t handler = RT_NULL;    //spi send callback handler ,default NULL
+    rt_memcpy((void*)&spi_bus_obj[index].spi_config, (void*)&config, sizeof(nrfx_spim_config_t));
+    nrfx_spim_evt_handler_t handler = RT_NULL;    //spi send callback handler ,default NULL
     void * context = RT_NULL;
-    nrfx_err_t nrf_ret = nrfx_spi_init(&spi, &config, handler, context);
+    nrfx_err_t nrf_ret = nrfx_spim_init(&spi, &config, handler, context);
     if(NRFX_SUCCESS == nrf_ret)
         return RT_EOK;
 
@@ -203,8 +241,8 @@ static rt_uint32_t spixfer(struct rt_spi_device *device, struct rt_spi_message *
     nrfx_err_t nrf_ret;
     RT_ASSERT(index != 0xFF);
 
-    nrfx_spi_t * p_instance =  &spi_bus_obj[index].spi;
-    nrfx_spi_xfer_desc_t p_xfer_desc;
+    nrfx_spim_t * p_instance =  &spi_bus_obj[index].spi;
+    nrfx_spim_xfer_desc_t p_xfer_desc;
 
     if(message->cs_take == 1)
     {
@@ -223,7 +261,7 @@ static rt_uint32_t spixfer(struct rt_spi_device *device, struct rt_spi_message *
         p_xfer_desc.rx_length = 0;
     }
 
-    nrf_ret = nrfx_spi_xfer(p_instance, &p_xfer_desc, 0);
+    nrf_ret = nrfx_spim_xfer(p_instance, &p_xfer_desc, 0);
     if(message->cs_release == 1)
     {
         nrf_gpio_pin_set((uint32_t)device->parent.user_data);
@@ -290,6 +328,45 @@ rt_err_t rt_hw_spi_device_attach(const char *bus_name, const char *device_name, 
     RT_ASSERT(result == RT_EOK);
     return result;
 }
+
+#define SPI_DEVICE_NAME     "spi4x"
+#define TEST_STRING "liguan"
+static rt_uint8_t       m_tx_buf[] = TEST_STRING;           /**< TX buffer. */
+
+static int spi_sample(int argc, char *argv[])
+	
+{
+    struct rt_spi_device *spi_dev;
+    char name[RT_NAME_MAX];
+    rt_uint8_t w25x_read_id = 0x65;
+    rt_uint8_t id[5] = {0};
+	rt_hw_spi_device_attach("spi4", SPI_DEVICE_NAME, 11);
+    struct rt_spi_configuration cfg;
+    cfg.data_width = 8;
+    cfg.mode = RT_SPI_MASTER | RT_SPI_MODE_0 | RT_SPI_MSB;
+    cfg.max_hz = 20 * 1000 *1000;                           /* 20M */
+
+    
+
+	   /* 查找 spi 设备获取设备句柄 */
+    spi_dev = (struct rt_spi_device *)rt_device_find(SPI_DEVICE_NAME);
+    if (!spi_dev)
+    {
+        rt_kprintf("spi sample run failed! can't find %s device!\n", name);
+    }
+    else
+    {
+   		 rt_spi_configure(spi_dev, &cfg);
+        /* 方式1：使用 rt_spi_send_then_recv()发送命令读取ID */
+		 while(1)
+       { rt_spi_send(spi_dev, m_tx_buf, 6);rt_thread_mdelay(500);}
+        //rt_kprintf("use rt_spi_send_then_recv() read w25q ID is:%x%x\n", id[3], id[4]);
+    	}
+return RT_EOK;
+
+}
+MSH_CMD_EXPORT(spi_sample, spi sample);
+
 
 #endif /* BSP_USING_SPI0 || BSP_USING_SPI1 || BSP_USING_SPI2 */
 #endif /*BSP_USING_SPI*/

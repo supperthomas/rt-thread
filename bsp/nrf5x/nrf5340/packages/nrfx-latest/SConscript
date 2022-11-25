@@ -1,0 +1,148 @@
+# for nRF5_SDK module compiling
+Import('rtconfig')
+from building import *
+
+cwd  = GetCurrentDir()
+src = Glob('./drivers/src/*.c')
+path = []
+define = []
+LIBPATH = []
+LIBS = []
+#include
+path += [cwd]
+path += [cwd + '/drivers']
+path += [cwd + '/drivers/include']
+path += [cwd + '/mdk']
+path += [cwd + '/hal']
+#path += [cwd + '/soc']
+path += [cwd + '/drivers/src']
+src += ['./helpers/nrfx_flag32_allocator.c']
+#chip toolchain
+if GetDepend('SOC_NRF52840') == True:
+	define += ['NRF52840_XXAA']
+	src += ['./mdk/system_nrf52840.c']
+	
+	if rtconfig.PLATFORM == 'armcc':
+		src += ['./mdk/arm_startup_nrf52840.s']
+		
+	if rtconfig.PLATFORM == 'gcc':
+		src += ['./mdk/gcc_startup_nrf52840.S']
+		
+	if rtconfig.PLATFORM == 'iar':
+		D_SRC += ['./mdk/iar_startup_nrf52840.s']
+
+elif GetDepend('SOC_NRF52833') == True:
+	define += ['NRF52833_XXAA']
+	src += ['./mdk/system_nrf52833.c']
+	
+	if rtconfig.PLATFORM == 'armcc':
+		src += ['./mdk/arm_startup_nrf52833.s']
+		
+	if rtconfig.PLATFORM == 'gcc':
+		src += ['./mdk/gcc_startup_nrf52833.S']
+		
+	if rtconfig.PLATFORM == 'iar':
+		D_SRC += ['./mdk/iar_startup_nrf52833.s']
+
+elif GetDepend('SOC_NRF52832') == True:
+	define += ['NRF52832_XXAA']
+	src += ['./mdk/system_nrf52.c']
+	
+	if rtconfig.PLATFORM == 'armcc':
+		src += ['./mdk/arm_startup_nrf52.s']
+		
+	if rtconfig.PLATFORM == 'gcc':
+		src += ['./mdk/gcc_startup_nrf52.S']
+		
+	if rtconfig.PLATFORM == 'iar':
+		D_SRC += ['./mdk/iar_startup_nrf52.s']
+        
+        
+elif GetDepend('SOC_NRF51822') == True:
+	define += ['NRF51822_XXAA']
+	src += ['./mdk/system_nrf51.c']
+	
+	if rtconfig.PLATFORM == 'armcc':
+		src += ['./mdk/arm_startup_nrf51.s']
+		
+	if rtconfig.PLATFORM == 'gcc':
+		src += ['./mdk/gcc_startup_nrf51.S']
+		
+	if rtconfig.PLATFORM == 'iar':
+		D_SRC += ['./mdk/iar_startup_nrf51.s']
+        
+        
+elif GetDepend('SOC_NRF5340') == True:
+	define += ['NRF5340_XXAA_APPLICATION']
+	src += ['./mdk/system_nrf5340_application.c']
+	
+	if rtconfig.PLATFORM == 'armcc':
+		src += ['./mdk/arm_startup_nrf5340_application.s']
+		
+	if rtconfig.PLATFORM == 'gcc':
+		src += ['./mdk/gcc_startup_nrf5340_application.S']
+		
+	if rtconfig.PLATFORM == 'iar':
+		D_SRC += ['./mdk/iar_startup_nrf5340_application.s']
+else:
+	pass
+#src += ['./soc/nrfx_atomic.c']
+#src += ['./usbd/app_usbd.c']
+#src += ['./usbd/app_usbd_core.c']
+#src += ['./usbd/app_usbd_string_desc.c']
+#src += ['./usbd/app_usbd_serial_num.c']
+#src += ['./usbd/class/cdc/acm/app_usbd_cdc_acm.c']
+#src += ['./atomic/nrf_atomic.c']
+#src += ['./atomic_fifo/nrf_atfifo.c']
+#src += ['./util/app_error.c']
+#src += ['./util/app_error_handler_gcc.c']
+#src += ['./util/app_error_weak.c']
+#src += ['./util/app_util_platform.c']
+#src += ['./util/nrf_assert.c']
+#src += ['./util/app_util_platform.c']
+#src += ['./util/app_util_platform.c']
+path += [cwd + '/usbd/class/cdc/acm']
+path += [cwd + '/usbd/class/cdc']
+path += [cwd + '/usbd']
+path += [cwd + '/libuarte']
+path += [cwd + '/atomic']
+path += [cwd + '/atomic_fifo']
+path += [cwd + '/util']
+path += [cwd + '/balloc']
+path += [cwd + '/queue']
+path += [cwd + '/timer']
+path += [cwd + '/delay']
+if GetDepend('BSP_USING_USB_CDC_ACM') == True:
+
+    LIBPATH += [cwd + '/libs'] 
+    LIBS += ['nusbd']
+else:
+	pass
+if GetDepend('BSP_USING_UART') == True:
+
+#    LIBPATH += [cwd + '/libs'] 
+#    LIBS += ['uarte']
+    src += ['./util/app_error.c']
+    
+    if rtconfig.PLATFORM == 'gcc':
+		src += ['./util/app_error_handler_gcc.c']
+        
+    if rtconfig.PLATFORM == 'armcc':
+		src += ['./util/app_error_handler_keil.c']
+        
+#    src += ['./util/app_error_handler_gcc.c']
+    src += ['./util/app_error_weak.c']
+    src += ['./util/app_util_platform.c']
+    src += ['./util/nrf_assert.c']
+    src += ['./libuarte/nrf_libuarte_async.c']
+    src += ['./libuarte/nrf_libuarte_drv.c']
+    src += ['./queue/nrf_queue.c']
+    src += ['./balloc/nrf_balloc.c']
+    src += ['./timer/timer_drv_rtc.c']
+else:
+	pass
+#group
+group = DefineGroup('nrf_Drivers', src, depend = [''], CPPPATH = path, CPPDEFINES = define,LIBS = LIBS, LIBPATH=LIBPATH)
+
+Return('group')
+

@@ -16,7 +16,7 @@
 #define __DRV_SPI_H_
 
 #ifdef BSP_USING_SPI
-#include "nrfx_spi.h"
+#include "nrfx_spim.h"
 
 /**
  * @brief Attach the spi device to SPI bus, this function must be used after initialization.
@@ -32,14 +32,14 @@ rt_err_t rt_hw_spi_device_attach(const char *bus_name, const char *device_name, 
 #define NRFX_SPI0_CONFIG         \
 {                                \
     .bus_name = "spi0",          \
-    .spi = NRFX_SPI_INSTANCE(0)  \
+    .spi = NRFX_SPIM_INSTANCE(0)  \
 }
 #endif
 #ifdef BSP_USING_SPI1
 #define NRFX_SPI1_CONFIG         \
 {                                \
     .bus_name = "spi1",          \
-    .spi = NRFX_SPI_INSTANCE(1)  \
+    .spi = NRFX_SPIM_INSTANCE(1)  \
 }
 #endif
 
@@ -47,20 +47,35 @@ rt_err_t rt_hw_spi_device_attach(const char *bus_name, const char *device_name, 
 #define NRFX_SPI2_CONFIG         \
 {                                \
     .bus_name = "spi2",          \
-    .spi = NRFX_SPI_INSTANCE(2)  \
+    .spi = NRFX_SPIM_INSTANCE(2)  \
+}
+#endif
+
+#ifdef BSP_USING_SPI3
+#define NRFX_SPI3_CONFIG         \
+{                                \
+    .bus_name = "spi3",          \
+    .spi = NRFX_SPIM_INSTANCE(3)  \
+}
+#endif
+#ifdef BSP_USING_SPI4
+#define NRFX_SPI4_CONFIG         \
+{                                \
+    .bus_name = "spi4",          \
+    .spi = NRFX_SPIM_INSTANCE(4)  \
 }
 #endif
 
 struct nrfx_drv_spi_config
 {
     char *bus_name;
-    nrfx_spi_t spi;
+    nrfx_spim_t spi;
 };
 
 struct nrfx_drv_spi
 {
-    nrfx_spi_t spi;    /* nrfx spi driver instance. */
-    nrfx_spi_config_t   spi_config; /* nrfx spi config Configuration */
+    nrfx_spim_t spi;    /* nrfx spi driver instance. */
+    nrfx_spim_config_t   spi_config; /* nrfx spi config Configuration */
     struct rt_spi_configuration *cfg;
     struct rt_spi_bus spi_bus;
 };

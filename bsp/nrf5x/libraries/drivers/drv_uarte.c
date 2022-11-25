@@ -12,9 +12,15 @@
 #include <rtdevice.h>
 #include <nrfx_uarte.h>
 #include "drv_uart.h"
+#include "nrf_libuarte_async.h"
+#include "nrfx_clock.h"
+
+#include "nrf_log_ctrl.h"
+#include "nrf_log_default_backends.h"
+#include "nrf_queue.h"
 
 #ifdef BSP_USING_UART
-#if defined(BSP_USING_UART0) || defined(BSP_USING_UART1)
+#if defined(BSP_USING_UART0) || defined(BSP_USING_UART1)|| defined(BSP_USING_UART2)|| defined(BSP_USING_UART3)
 typedef struct
 {
     struct rt_serial_device *serial;
@@ -30,7 +36,7 @@ typedef struct
 #ifdef BSP_USING_UART0
 static struct rt_serial_device m_serial_0;
 drv_uart_cb_t m_uarte0_cb = {
-    .uarte_instance = NRFX_UARTE_INSTANCE(0),
+    .uarte_instance = NRFX_UARTE_INSTANCE(1),
     .rx_length = 0,
     .rx_pin = BSP_UART0_RX_PIN,
     .tx_pin = BSP_UART0_TX_PIN,
@@ -41,13 +47,34 @@ drv_uart_cb_t m_uarte0_cb = {
 #ifdef BSP_USING_UART1
 static struct rt_serial_device m_serial_1;
 drv_uart_cb_t m_uarte1_cb = {
-    .uarte_instance = NRFX_UARTE_INSTANCE(1),
+    .uarte_instance = NRFX_UARTE_INSTANCE(0),
     .rx_length = 0,
     .rx_pin = BSP_UART1_RX_PIN,
     .tx_pin = BSP_UART1_TX_PIN,
     .isInit = false
 };
 #endif  /* BSP_USING_UART1 */
+#ifdef BSP_USING_UART2
+static struct rt_serial_device m_serial_2;
+drv_uart_cb_t m_uarte2_cb = {
+    .uarte_instance = NRFX_UARTE_INSTANCE(2),
+    .rx_length = 0,
+    .rx_pin = BSP_UART2_RX_PIN,
+    .tx_pin = BSP_UART2_TX_PIN,
+    .isInit = false
+};
+#endif  /* BSP_USING_UART2 */
+#ifdef BSP_USING_UART3
+static struct rt_serial_device m_serial_3;
+drv_uart_cb_t m_uarte3_cb = {
+    .uarte_instance = NRFX_UARTE_INSTANCE(3),
+    .rx_length = 0,
+    .rx_pin = BSP_UART3_RX_PIN,
+    .tx_pin = BSP_UART3_TX_PIN,
+    .isInit = false
+};
+#endif  /* BSP_USING_UART3 */
+
 
 static void uarte_evt_handler(nrfx_uarte_event_t const * p_event,
                               void *                     p_context)
@@ -134,6 +161,9 @@ static rt_err_t _uart_cfg(struct rt_serial_device *serial, struct serial_configu
     case BAUD_RATE_921600:
         config.baudrate = NRF_UARTE_BAUDRATE_921600;
         break;
+	case 1000000:
+        config.baudrate = NRF_UARTE_BAUDRATE_1000000;
+		break;
     case BAUD_RATE_2000000:
     case BAUD_RATE_3000000:
         return -RT_EINVAL;
@@ -256,16 +286,17 @@ static struct rt_uart_ops _uart_ops = {
     _uart_getc
 };
 
-void rt_hw_uart_init(void)
+int rt_hw_uart_init(void)
 {
     struct serial_configure config = RT_SERIAL_CONFIG_DEFAULT;
 
 #ifdef BSP_USING_UART0
     m_serial_0.config = config;
+	m_serial_0.config.baud_rate =  1000000;
     m_serial_0.ops = &_uart_ops;
     m_uarte0_cb.serial = &m_serial_0;
     rt_hw_serial_register(&m_serial_0, "uart0", \
-                            RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_INT_RX ,  &m_uarte0_cb);
+                            RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_INT_RX | RT_DEVICE_FLAG_DMA_RX | RT_DEVICE_FLAG_DMA_TX ,  &m_uarte0_cb);
 #endif  /* BSP_USING_UART0 */
 
 #ifdef BSP_USING_UART1
@@ -273,9 +304,145 @@ void rt_hw_uart_init(void)
     m_serial_1.ops = &_uart_ops;
     m_uarte1_cb.serial = &m_serial_1;
     rt_hw_serial_register(&m_serial_1, "uart1", \
-                            RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_INT_RX |RT_DEVICE_FLAG_INT_TX,  &m_uarte1_cb);
+                            RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_INT_RX |RT_DEVICE_FLAG_INT_TX | RT_DEVICE_FLAG_DMA_RX | RT_DEVICE_FLAG_DMA_TX,  &m_uarte1_cb);
 #endif  /* BSP_USING_UART1 */
 
+#ifdef BSP_USING_UART2
+    m_serial_2.config = config;
+    m_serial_2.ops = &_uart_ops;
+    m_uarte2_cb.serial = &m_serial_2;
+    rt_hw_serial_register(&m_serial_2, "uart2", \
+                            RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_INT_RX |RT_DEVICE_FLAG_INT_TX | RT_DEVICE_FLAG_DMA_RX | RT_DEVICE_FLAG_DMA_TX,  &m_uarte2_cb);
+#endif  /* BSP_USING_UART2 */
+
+#ifdef BSP_USING_UART3
+    m_serial_3.config = config;
+    m_serial_3.ops = &_uart_ops;
+    m_uarte3_cb.serial = &m_serial_3;
+    rt_hw_serial_register(&m_serial_3, "uart3", \
+                            RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_INT_RX |RT_DEVICE_FLAG_INT_TX | RT_DEVICE_FLAG_DMA_RX | RT_DEVICE_FLAG_DMA_TX,  &m_uarte3_cb);
+#endif  /* BSP_USING_UART3 */
+
+
 }
+
+
+NRF_LIBUARTE_ASYNC_DEFINE(libuarte, 0, 0, 0, NRF_LIBUARTE_PERIPHERAL_NOT_USED, 255, 3);
+
+static uint8_t text[] = "UART example started.\r\n Loopback:\r\n";
+static uint8_t text_size = sizeof(text);
+static volatile bool m_loopback_phase;
+static uint8_t test=0;
+static volatile bool flag=true;
+static volatile uint8_t *pd;
+typedef struct {
+    uint8_t * p_data;
+    uint32_t length;
+} buffer_t;
+
+NRF_QUEUE_DEF(buffer_t, m_buf_queue, 10, NRF_QUEUE_MODE_NO_OVERFLOW);
+
+void uart_event_handler(void * context, nrf_libuarte_async_evt_t * p_evt)
+{   uint32_t i;
+    
+    nrf_libuarte_async_t * p_libuarte = (nrf_libuarte_async_t *)context;
+    ret_code_t ret;
+
+    switch (p_evt->type)
+    {
+        case NRF_LIBUARTE_ASYNC_EVT_ERROR:
+
+            break;
+        case NRF_LIBUARTE_ASYNC_EVT_RX_DATA:
+        //pd=p_evt->data.rxtx.p_data;
+        //  for(i=0;i<p_evt->data.rxtx.length;i++)
+        //  {
+        //    if(*(pd) != test)
+        //    {
+        //        flag=false;
+        //        break;
+        //    }
+        //     ++test;
+        //     ++pd;
+          
+        //  }
+            ret = nrf_libuarte_async_tx(p_libuarte,p_evt->data.rxtx.p_data, p_evt->data.rxtx.length);
+            if (ret == NRF_ERROR_BUSY)
+            {
+                buffer_t buf = {
+                    .p_data = p_evt->data.rxtx.p_data,
+                    .length = p_evt->data.rxtx.length,
+                };
+
+                ret = nrf_queue_push(&m_buf_queue, &buf);
+                APP_ERROR_CHECK(ret);
+            }
+            else
+            {
+                APP_ERROR_CHECK(ret);
+            }
+
+            m_loopback_phase = true;
+            break;
+        case NRF_LIBUARTE_ASYNC_EVT_TX_DONE:
+            if (m_loopback_phase)
+            {
+                nrf_libuarte_async_rx_free(p_libuarte, p_evt->data.rxtx.p_data, p_evt->data.rxtx.length);
+                if (!nrf_queue_is_empty(&m_buf_queue))
+                {
+                    buffer_t buf;
+                    ret = nrf_queue_pop(&m_buf_queue, &buf);
+                    APP_ERROR_CHECK(ret);
+                    UNUSED_RETURN_VALUE(nrf_libuarte_async_tx(p_libuarte, buf.p_data, buf.length));
+                }
+            }
+           
+            break;
+        default:
+            break;
+    }
+}
+static void clk_event_handler(nrfx_clock_evt_type_t event){}
+
+
+static int uart_dma_sample(int argc, char *argv[])
+	
+{
+
+
+    nrfx_clock_init(clk_event_handler);
+    nrfx_clock_enable();
+    nrfx_clock_lfclk_start();
+
+
+    nrf_libuarte_async_config_t nrf_libuarte_async_config = {
+            .tx_pin     = BSP_UART1_TX_PIN,
+            .rx_pin     = BSP_UART1_RX_PIN,
+            .baudrate   = NRF_UARTE_BAUDRATE_1000000,
+            .parity     = NRF_UARTE_PARITY_EXCLUDED,
+            .hwfc       = NRF_UARTE_HWFC_DISABLED,
+            .timeout_us = 100,
+            .int_prio   = APP_IRQ_PRIORITY_LOW
+    };
+
+     nrf_libuarte_async_init(&libuarte, &nrf_libuarte_async_config, uart_event_handler, (void *)&libuarte);
+
+   
+
+    nrf_libuarte_async_enable(&libuarte);
+
+  nrf_libuarte_async_tx(&libuarte, text, text_size);
+  
+
+    while (true)
+    {
+       
+    }
+
+return RT_EOK;
+
+}
+MSH_CMD_EXPORT(uart_dma_sample, uartdma sample);
+
 #endif /* defined(BSP_USING_UART0) || defined(BSP_USING_UART1) */
 #endif /* BSP_USING_UART */
