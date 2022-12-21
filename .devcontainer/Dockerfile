@@ -13,14 +13,7 @@ RUN apt-get install -y vim
 
 RUN apt-get install -y git
 
-RUN rm /etc/localtime
-
-RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-
-RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-
-RUN apt-get install -y qemu-system-arm
-
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y qemu-system-arm
 #env
 RUN mkdir /root/.env
 
