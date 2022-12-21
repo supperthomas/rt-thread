@@ -5,8 +5,6 @@ ARG DEST_DIR=/root
 WORKDIR ${DEST_DIR}
 
 #system
-RUN sudo timedatectl set-timezone "Asia/Shanghai"
-
 RUN apt-get update
 
 RUN apt-get upgrade -y
@@ -15,7 +13,13 @@ RUN apt-get install -y vim
 
 RUN apt-get install -y git
 
-RUN apt-get install -y -qq qemu-system-arm
+RUN rm /etc/localtime
+
+RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+RUN apt-get install -y qemu-system-arm
 
 #env
 RUN mkdir /root/.env
