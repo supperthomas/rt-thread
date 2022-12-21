@@ -13,6 +13,8 @@ RUN apt-get install -y vim
 
 RUN apt-get install -y git
 
+RUN apt-get install -y -qq qemu-system-arm
+
 #env
 RUN mkdir /root/.env
 
