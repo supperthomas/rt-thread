@@ -27,7 +27,7 @@ RUN mkdir /root/.env/tools/scripts
 
 RUN touch /root/.env/packages/Kconfig
 
-Run echo "source $PKGS_DIR/packages/Kconfig" > /root/.env/packages/Kconfig
+Run echo 'source "$PKGS_DIR/packages/Kconfig"' > /root/.env/packages/Kconfig
 
 RUN git clone https://github.com/RT-Thread/env.git /root/.env/tools/scripts/
 
