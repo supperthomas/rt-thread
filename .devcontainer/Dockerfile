@@ -9,11 +9,10 @@ RUN apt-get update
 
 RUN apt-get upgrade -y
 
-RUN apt-get install -y vim
-
-RUN apt-get install -y git
+RUN apt-get install -y vim git wget python3 python-is-python3 pip gcc-arm-none-eabi scons libncurses5-dev
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y qemu-system-arm
+
 #env
 RUN mkdir /root/.env
 
@@ -35,29 +34,10 @@ RUN git clone https://github.com/RT-Thread/packages.git /root/.env/packages/pack
 
 ENV PATH="/root/.env/tools/scripts:$PATH"
 
-RUN apt-get install -y wget
-
-RUN apt-get install -y python3 python-is-python3 
-
-RUN apt-get install -y pip
-#arm-none-eabi
-RUN apt-get install -y gcc-arm-none-eabi
-#rtthread
-RUN apt-get install -y scons
-
-RUN apt-get install -y libncurses5-dev
-
 RUN pip install requests -qq
 
 ENV RTT_EXEC_PATH=/usr/bin
 
-RUN apt-get clean
-
-RUN rm -rf /var/lib/apt/lists/*
-
 ENV RTT_CC=gcc
 
 WORKDIR /root
-
-
-
