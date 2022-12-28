@@ -9,6 +9,12 @@
 	"settings": {
 		"terminal.integrated.defaultProfile.linux": "bash"
 	},
+	"features": {
+    		"ghcr.io/devcontainers/features/sshd:1": 
+		{
+        		"version": "latest"
+    		}
+	},
 	"extensions": [
 		"ms-vscode.cpptools"
 	]
