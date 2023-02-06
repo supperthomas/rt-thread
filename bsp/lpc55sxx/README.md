@@ -5,7 +5,7 @@ LPC55Sxx系列 BSP 目前支持情况如下表所示：
 | BSP 文件夹名称       | 开发板名称                |
 |:------------------------- |:-------------------------- |
 | **LPC55S69 系列** |  |
-| LPC55S69-EVK | 恩智浦 LPC55S69 EVK[[官方链接]( <https://www.nxp.com/products/processors-and-microcontrollers/arm-microcontrollers/general-purpose-mcus/lpc5500-cortex-m33/lpcxpresso55s69-development-board:LPC55S69-EVK)] |
+| LPC55S69-EVK | 恩智浦 LPC55S69 EVK[[官方链接](https://www.nxp.com/products/processors-and-microcontrollers/arm-microcontrollers/general-purpose-mcus/lpc5500-cortex-m33/lpcxpresso55s69-development-board:LPC55S69-EVK)] |
 
 可以通过阅读相应 BSP 下的 README 来快速上手，如果想要使用 BSP 更多功能可参考 docs 文件夹下提供的说明文档，如下表所示：
 
