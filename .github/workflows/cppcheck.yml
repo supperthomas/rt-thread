@@ -18,6 +18,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get -qq install cppcheck
+          git remote -v
+          git fetch origin
+          ls
           git branch -a
           git fetch origin origin/master:origin/master
           git branch -a
