@@ -19,8 +19,8 @@ jobs:
           sudo apt-get update
           sudo apt-get -qq install cppcheck
           changed_files=$(git diff --name-only HEAD origin/master | grep -E '\.(c|cpp|cc|cxx)$')
-	  echo $changed_files
-	  
+          echo $changed_files
+          
          # if [ -n "$changed_files" ];then
 	  #          cppcheck --enable=warning,performance,portability --inline-suppr --error-exitcode=1 --force $changed_files
           #fi
