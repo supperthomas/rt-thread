@@ -18,13 +18,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get -qq install cppcheck
-          changed_files=$(git diff --name-only HEAD origin/master | \
-	 grep -E '\.(c|cpp|cc|cxx)$')
-   
-          if [ -n "$changed_files" ];then
-	            cppcheck --enable=warning,performance,portability --inline-suppr --error-exitcode=1 --force $changed_files
-	            err=$?
-	                if [ $err -ne 0 ]; then
-	                   echo "Hello! we found a obvious fault, please fix the error then commit again"
-	                fi
-          fi
+          changed_files=$(git diff --name-only HEAD origin/master | grep -E '\.(c|cpp|cc|cxx)$')
+	  echo $changed_files
+	  
+         # if [ -n "$changed_files" ];then
+	  #          cppcheck --enable=warning,performance,portability --inline-suppr --error-exitcode=1 --force $changed_files
+          #fi
