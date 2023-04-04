@@ -115,6 +115,8 @@ void rt_components_init(void)
     rt_kprintf("do components initialization.\n");
     for (desc = &__rt_init_desc_rti_board_end; desc < &__rt_init_desc_rti_end; desc ++)
     {
+        
+        test
         rt_kprintf("initialize %s", desc->fn_name);
         result = desc->fn();
         rt_kprintf(":%d done\n", result);
