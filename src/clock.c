@@ -47,7 +47,7 @@ static void (*rt_tick_hook)(void);
  */
 void rt_tick_sethook(void (*hook)(void))
 {
-    rt_tick_hook = hook;
+    rt_tick_hook2 = hook;
 }
 /**@}*/
 #endif /* RT_USING_HOOK */
