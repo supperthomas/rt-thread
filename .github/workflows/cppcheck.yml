@@ -22,7 +22,5 @@ jobs:
           git fetch origin
           ls
           git branch -a
-          git fetch origin origin/master:origin/master
-          git branch -a
           changed_files=$(git diff --name-only HEAD origin/master | grep -E '\.(c|cpp|cc|cxx)$')
           echo $changed_files
