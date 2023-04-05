@@ -25,8 +25,8 @@ jobs:
           changed_files=$(git diff --name-only HEAD origin/master | grep -E '\.(c|cpp|cc|cxx)$')
           echo $changed_files
           if [ -n "$changed_files" ];then
-              #cppcheck --enable=warning,performance,portability --inline-suppr --error-exitcode=1 --force $changed_files
-              cppcheck --enable=warning,style,performance,portability,information --template="{file}:{line}:{severity}:{id}:{message}" --language=c --std=misra-c2012 $changed_files
+              cppcheck --enable=warning,performance,portability --inline-suppr --error-exitcode=1 --force $changed_files
+              #cppcheck --enable=warning,style,performance,portability,information --template="{file}:{line}:{severity}:{id}:{message}" --language=c --std=misra-c2012 $changed_files
               err=$?
               if [ $err -ne 0 ]; then
                   echo "Hello! we found a obvious fault, please fix the error then commit again"
