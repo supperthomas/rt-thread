@@ -1,21 +1,35 @@
-name: cppcheck-action-test
-on: [push]
+name: Static code analysis
+
+on: [pull_request]
 
 jobs:
-  build:
-    name: cppcheck-test
+  scancode_job:
     runs-on: ubuntu-latest
+    name: Static code analysis
     steps:
-      - uses: actions/checkout@v2
-          
-      - name: cppcheck
-        uses: deep5050/cppcheck-action@main
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN}}
-          
-        
-      - name: publish report    
-        uses: mikeal/publish-to-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH_NAME: 'master' # your branch name goes here
+          python-version: 3.8
+      
+      - name: cppcheck
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get -qq install cppcheck
+          git remote -v
+          git fetch origin
+          cppcheck --version
+          ls
+          git branch -a
+          changed_files=$(git diff --name-only HEAD origin/master | grep -E '\.(c|cpp|cc|cxx)$')
+          echo $changed_files
+          if [ -n "$changed_files" ];then
+              cppcheck --enable=warning,performance,portability --inline-suppr --error-exitcode=1 --force $changed_files
+              #cppcheck --enable=warning,style,performance,portability,information --template="{file}:{line}:{severity}:{id}:{message}" --language=c --std=misra-c2012 $changed_files
+              err=$?
+              if [ $err -ne 0 ]; then
+                  echo "Hello! we found a obvious fault, please fix the error then commit again"
+              fi
+          fi

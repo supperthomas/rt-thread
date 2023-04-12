@@ -61,7 +61,12 @@ rt_weak void rt_hw_us_delay(rt_uint32_t us)
     RT_DEBUG_LOG(RT_DEBUG_DEVICE, ("rt_hw_us_delay() doesn't support for this board."
         "Please consider implementing rt_hw_us_delay() in another file.\n"));
 }
-
+void foo(int x)
+{
+    int buf[10];
+    if(x==1000)
+        buf[x] = 0;
+}
 rt_weak const char *rt_hw_cpu_arch(void)
 {
     return "unknown";

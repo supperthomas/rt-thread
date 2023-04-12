@@ -115,6 +115,8 @@ void rt_components_init(void)
     rt_kprintf("do components initialization.\n");
     for (desc = &__rt_init_desc_rti_board_end; desc < &__rt_init_desc_rti_end; desc ++)
     {
+        
+        test
         rt_kprintf("initialize %s", desc->fn_name);
         result = desc->fn();
         rt_kprintf(":%d done\n", result);
@@ -205,7 +207,7 @@ void main_thread_entry(void *parameter)
 void rt_application_init(void)
 {
     rt_thread_t tid;
-
+sdfsd
 #ifdef RT_USING_HEAP
     tid = rt_thread_create("main", main_thread_entry, RT_NULL,
                            RT_MAIN_THREAD_STACK_SIZE, RT_MAIN_THREAD_PRIORITY, 20);
