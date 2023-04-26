@@ -293,6 +293,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get -qq install gcc-multilib libncurses5-dev scons
+          python3 -m pip install scons
+          python3 -m SCons -v
+          sudo apt-get -qq install cppcheck
           sudo python -m pip install --upgrade pip -qq
           pip install requests -qq
           git config --global http.postBuffer 524288000
@@ -350,9 +353,11 @@ jobs:
           RTT_BSP: ${{ matrix.legs.RTT_BSP }}
           RTT_TOOL_CHAIN: ${{ matrix.legs.RTT_TOOL_CHAIN }}
           SRTT_BSP: ${{ join(matrix.legs.SUB_RTT_BSP, ',') }}
+          CPUS: $(cat /proc/cpuinfo | grep "processor" | sort | uniq | wc -l) 
         run: |
           source ~/.env/env.sh
           count=0
+          CAT $CPUS
           for bsp in $(echo $SRTT_BSP | tr ',' '\n'); do
             count=$((count+1))
             echo "Compiling BSP: ==$count=== $bsp ===="
