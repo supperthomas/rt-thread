@@ -302,6 +302,7 @@ jobs:
           python -c "import tools.menuconfig; tools.menuconfig.touch_env()"
           echo "RTT_ROOT=${{ github.workspace }}" >> $GITHUB_ENV
           echo "RTT_CC=gcc" >> $GITHUB_ENV
+          echo $(nproc)
 
       - name: Install Arm ToolChains
         if: ${{ matrix.legs.RTT_TOOL_CHAIN == 'sourcery-arm' && success() }}
