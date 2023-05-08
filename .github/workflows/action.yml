@@ -358,7 +358,7 @@ jobs:
         run: |
           source ~/.env/env.sh
           count=0
-          CAT $CPUS
+          echo $CPUS
           for bsp in $(echo $SRTT_BSP | tr ',' '\n'); do
             count=$((count+1))
             echo "Compiling BSP: ==$count=== $bsp ===="
