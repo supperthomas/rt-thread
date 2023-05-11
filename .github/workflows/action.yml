@@ -348,6 +348,7 @@ jobs:
 
       - name: Bsp Scons Compile
         if: ${{ success() }}
+        shell: bash
         env:
           RTT_BSP: ${{ matrix.legs.RTT_BSP }}
           RTT_TOOL_CHAIN: ${{ matrix.legs.RTT_TOOL_CHAIN }}
@@ -359,7 +360,7 @@ jobs:
           for bsp in $(echo $SRTT_BSP | tr ',' '\n'); do
             count=$((count+1))
             echo "::group::Compiling BSP: ==$count=== $bsp ===="
-            pushd bsp/$bsp && pkgs --update && popd
+            pushd bsp/$bsp && scons --pyconfig-silent && pkgs --update && popd
             scons -C bsp/$bsp -j$(nproc) --debug=time | tee output.log || \
             { total_time=$(grep "Total command execution time" output.log | awk '{print $5}'); \
               failed=$((failed+1)) ; echo "::endgroup::" ; echo "::error::build $bsp failed" ; \
