@@ -20,7 +20,7 @@
  * 2021-06-03     Flybreak     Fix the crash problem after opening Oz optimization on ac6.
  * 2023-03-01     Bernard      Fix the alignment issue for minimal size
  */  
-
+   
 #include <rthw.h>
 #include <rtthread.h>
 
