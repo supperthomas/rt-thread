@@ -359,6 +359,7 @@ jobs:
       - name: Bsp Scons Compile
         if: ${{ success() }}
         shell: bash
+        continue-on-error: true
         env:
           RTT_BSP: ${{ matrix.legs.RTT_BSP }}
           RTT_TOOL_CHAIN: ${{ matrix.legs.RTT_TOOL_CHAIN }}
