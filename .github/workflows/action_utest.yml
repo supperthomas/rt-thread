@@ -117,10 +117,10 @@ jobs:
         scons --pyconfig-silent -C $TEST_BSP_ROOT
         scons -j$(nproc) --strict -C $TEST_BSP_ROOT
         mkdir ${{ github.workspace }}/exe
-        cp -r bsp/${{ github.event.inputs.bsp_options }} ${{ github.workspace }}/exe/
-        scons --dist -C bsp/${{ github.event.inputs.bsp_options }}
-        cp bsp/${{ github.event.inputs.bsp_options }}/dist/project.zip ${{ github.workspace }}/exe/
-        ls bsp/${{ github.event.inputs.bsp_options }}/dist
+        cp -r $TEST_BSP_ROOT ${{ github.workspace }}/exe/
+        scons --dist -C $TEST_BSP_ROOT
+        cp $TEST_BSP_ROOT/dist/project.zip ${{ github.workspace }}/exe/
+        ls $TEST_BSP_ROOT/dist
         pwd
         cd bsp/qemu-vexpress-a9
         ls
