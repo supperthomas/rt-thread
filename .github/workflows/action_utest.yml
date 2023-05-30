@@ -47,7 +47,15 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get -yqq install scons qemu-system git
-
+        sudo apt-get -qq install gcc-multilib libncurses5 libncurses5-dev libncursesw5-dev scons
+        sudo python -m pip install --upgrade pip -qq
+        pip install requests -qq
+        git config --global http.postBuffer 524288000
+        python -c "import tools.menuconfig; tools.menuconfig.touch_env()"
+        echo "RTT_ROOT=${{ github.workspace }}" >> $GITHUB_ENV
+        echo "RTT_CC=gcc" >> $GITHUB_ENV
+        source ~/.env/env.sh
+        
     - name: Install Arm ToolChains
       if: ${{ matrix.legs.QEMU_ARCH == 'arm' && matrix.legs.UTEST != 'rtsmart/arm' && success() }}
       shell: bash
