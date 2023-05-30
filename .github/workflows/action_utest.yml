@@ -115,6 +115,10 @@ jobs:
         echo CONFIG_RT_USING_UTESTCASES=y >> $TEST_BSP_ROOT/.config
         cat examples/utest/configs/$TEST_CONFIG_FILE >> $TEST_BSP_ROOT/.config
         scons --pyconfig-silent -C $TEST_BSP_ROOT
+        sed -i "s/# CONFIG_PKG_USING_RTT_AUTO_EXE_CMD is not set/CONFIG_PKG_USING_RTT_AUTO_EXE_CMD=y/g" bsp/$RTT_BSP/.config
+        scons --pyconfig-silent -C bsp/$RTT_BSP
+        sed -i "s/CONFIG_RTT_CMD_1_STR=\"version\"/CONFIG_RTT_CMD_1_STR=\"utest_run\"/g" bsp/$RTT_BSP/.config
+        scons --pyconfig-silent -C bsp/$RTT_BSP
         scons -j$(nproc) --strict -C $TEST_BSP_ROOT
         mkdir ${{ github.workspace }}/exe
         cp -r $TEST_BSP_ROOT ${{ github.workspace }}/exe/
