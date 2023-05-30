@@ -122,7 +122,12 @@ jobs:
         cp bsp/${{ github.event.inputs.bsp_options }}/dist/project.zip ${{ github.workspace }}/exe/
         ls bsp/${{ github.event.inputs.bsp_options }}/dist
         pwd
-
+        cd bsp/qemu-vexpress-a9
+        ls
+        sudo nohup ./qemu-nographic.sh > cmd3.out 2>&1 &
+        sleep 100
+        cat cmd3.out
+        
     - uses: actions/upload-artifact@v3
       with:
         name: exe
