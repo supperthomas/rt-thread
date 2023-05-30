@@ -120,12 +120,9 @@ jobs:
         sed -i "s/CONFIG_RTT_CMD_1_STR=\"version\"/CONFIG_RTT_CMD_1_STR=\"utest_run\"/g" $TEST_BSP_ROOT/.config
         scons --pyconfig-silent -C $TEST_BSP_ROOT
         pushd $TEST_BSP_ROOT && pkgs --update && popd
-
         scons -j$(nproc) --strict -C $TEST_BSP_ROOT
         mkdir ${{ github.workspace }}/exe
         scons --dist -C $TEST_BSP_ROOT
-        cp $TEST_BSP_ROOT/dist/project.zip ${{ github.workspace }}/exe/
-        ls $TEST_BSP_ROOT/dist
         pwd
         cd bsp/qemu-vexpress-a9
         ls
