@@ -118,6 +118,10 @@ jobs:
         # Clear -fno-exceptions in rtconfig.py
         sed -i 's/-fno-exceptions/ /g' $TEST_BSP_ROOT/rtconfig.py
 
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: 3.8
     - name: Build BSP
       run: |
         source ~/.env/env.sh
