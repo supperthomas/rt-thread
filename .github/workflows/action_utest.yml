@@ -136,7 +136,11 @@ jobs:
         pushd $TEST_BSP_ROOT && pkgs --update && popd
         scons -j$(nproc) --strict -C $TEST_BSP_ROOT
         mkdir ${{ github.workspace }}/exe
+        cp -r $TEST_BSP_ROOT ${{ github.workspace }}/exe/
+        scons --dist -C bsp/${{ github.event.inputs.bsp_options }}
+        cp $TEST_BSP_ROOT/dist/project.zip ${{ github.workspace }}/exe/
         scons --dist -C $TEST_BSP_ROOT
+        
         pwd
         cd bsp/qemu-vexpress-a9
         ls
