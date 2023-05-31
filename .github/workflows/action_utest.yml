@@ -54,7 +54,7 @@ jobs:
         python -c "import tools.menuconfig; tools.menuconfig.touch_env()"
         echo "RTT_ROOT=${{ github.workspace }}" >> $GITHUB_ENV
         echo "RTT_CC=gcc" >> $GITHUB_ENV
-        source ~/.env/env.sh
+
         
     - name: Install Arm ToolChains
       if: ${{ matrix.legs.QEMU_ARCH == 'arm' && matrix.legs.UTEST != 'rtsmart/arm' && success() }}
@@ -120,6 +120,7 @@ jobs:
 
     - name: Build BSP
       run: |
+        source ~/.env/env.sh
         echo CONFIG_RT_USING_UTESTCASES=y >> $TEST_BSP_ROOT/.config
         cat examples/utest/configs/$TEST_CONFIG_FILE >> $TEST_BSP_ROOT/.config
         scons --pyconfig-silent -C $TEST_BSP_ROOT
