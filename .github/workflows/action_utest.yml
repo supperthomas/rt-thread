@@ -32,21 +32,7 @@ jobs:
       fail-fast: false
       matrix:
        legs:
-         - {UTEST: "kernel/mem",       RTT_BSP: "bsp/qemu-vexpress-a9",    QEMU_ARCH: "arm",      QEMU_MACHINE: "vexpress-a9", CONFIG_FILE: "kernel/mem.conf",     SD_FILE: "sd.bin", RUN: "yes"}
-         - {UTEST: "kernel/ipc",       RTT_BSP: "bsp/qemu-vexpress-a9",    QEMU_ARCH: "arm",      QEMU_MACHINE: "vexpress-a9", CONFIG_FILE: "kernel/ipc.conf",     SD_FILE: "sd.bin", RUN: "yes"}
-         - {UTEST: "kernel/irq",       RTT_BSP: "bsp/qemu-vexpress-a9",    QEMU_ARCH: "arm",      QEMU_MACHINE: "vexpress-a9", CONFIG_FILE: "kernel/irq.conf",     SD_FILE: "sd.bin", RUN: "yes"}
-         - {UTEST: "kernel/timer",     RTT_BSP: "bsp/qemu-vexpress-a9",    QEMU_ARCH: "arm",      QEMU_MACHINE: "vexpress-a9", CONFIG_FILE: "kernel/timer.conf",   SD_FILE: "sd.bin", RUN: "yes"}
-         - {UTEST: "kernel/thread",    RTT_BSP: "bsp/qemu-vexpress-a9",    QEMU_ARCH: "arm",      QEMU_MACHINE: "vexpress-a9", CONFIG_FILE: "kernel/thread.conf",  SD_FILE: "sd.bin", RUN: "yes"}
-         - {UTEST: "kernel/atomic",    RTT_BSP: "bsp/qemu-vexpress-a9",    QEMU_ARCH: "arm",      QEMU_MACHINE: "vexpress-a9", CONFIG_FILE: "kernel/atomic.conf",  SD_FILE: "sd.bin", RUN: "yes"}
          - {UTEST: "kernel/atomic_c11",    RTT_BSP: "bsp/qemu-vexpress-a9",    QEMU_ARCH: "arm",      QEMU_MACHINE: "vexpress-a9", CONFIG_FILE: "kernel/atomic_c11.conf",  SD_FILE: "sd.bin", RUN: "yes"}
-         - {UTEST: "components/utest", RTT_BSP: "bsp/qemu-vexpress-a9",    QEMU_ARCH: "arm",      QEMU_MACHINE: "vexpress-a9", CONFIG_FILE: "utest_self/self.conf", SD_FILE: "sd.bin", RUN: "yes"}
-         - {UTEST: "components/cpp11", RTT_BSP: "bsp/qemu-vexpress-a9",    QEMU_ARCH: "arm",      QEMU_MACHINE: "vexpress-a9", CONFIG_FILE: "cpp11/cpp11.conf",    SD_FILE: "sd.bin", RUN: "yes"}
-         - {UTEST: "kernel/mem/riscv64", RTT_BSP: "bsp/qemu-virt64-riscv", QEMU_ARCH: "riscv64",  QEMU_MACHINE: "virt",  CONFIG_FILE: "kernel/mem.conf",   SD_FILE: "None", RUN: "yes"}
-         - {UTEST: "kernel/atomic/riscv64", RTT_BSP: "bsp/qemu-virt64-riscv", QEMU_ARCH: "riscv64",  QEMU_MACHINE: "virt",  CONFIG_FILE: "kernel/atomic.conf",   SD_FILE: "None", RUN: "yes"}
-         - {UTEST: "kernel/atomic_c11/riscv64", RTT_BSP: "bsp/qemu-virt64-riscv", QEMU_ARCH: "riscv64",  QEMU_MACHINE: "virt",  CONFIG_FILE: "kernel/atomic_c11.conf",   SD_FILE: "None", RUN: "yes"}
-         - {UTEST: "rtsmart/arm",     RTT_BSP: "bsp/qemu-vexpress-a9",    QEMU_ARCH: "arm",      QEMU_MACHINE: "vexpress-a9", CONFIG_FILE: "rtsmart/base.conf",   SD_FILE: "sd.bin", RUN: "no"}
-         - {UTEST: "rtsmart/aarch64", RTT_BSP: "bsp/qemu-virt64-aarch64", QEMU_ARCH: "aarch64",  QEMU_MACHINE: "virt",  CONFIG_FILE: "rtsmart/base.conf",   SD_FILE: "sd.bin", RUN: "no"}
-         - {UTEST: "rtsmart/riscv64", RTT_BSP: "bsp/qemu-virt64-riscv",   QEMU_ARCH: "riscv64",  QEMU_MACHINE: "virt",  CONFIG_FILE: "rtsmart/base.conf",   SD_FILE: "None", RUN: "yes"}
     env:
       TEST_QEMU_ARCH: ${{ matrix.legs.QEMU_ARCH }}
       TEST_QEMU_MACHINE: ${{ matrix.legs.QEMU_MACHINE }}
@@ -55,13 +41,25 @@ jobs:
       TEST_SD_FILE: ${{ matrix.legs.SD_FILE }}
     steps:
     - uses: actions/checkout@v3
-
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: 3.8
+        
     - name: Install Tools
       shell: bash
       run: |
         sudo apt-get update
         sudo apt-get -yqq install scons qemu-system git
+        sudo apt-get -qq install gcc-multilib libncurses5 libncurses5-dev libncursesw5-dev scons
+        sudo python -m pip install --upgrade pip -qq
+        pip install requests -qq
+        git config --global http.postBuffer 524288000
+        python -c "import tools.menuconfig; tools.menuconfig.touch_env()"
+        echo "RTT_ROOT=${{ github.workspace }}" >> $GITHUB_ENV
+        echo "RTT_CC=gcc" >> $GITHUB_ENV
 
+        
     - name: Install Arm ToolChains
       if: ${{ matrix.legs.QEMU_ARCH == 'arm' && matrix.legs.UTEST != 'rtsmart/arm' && success() }}
       shell: bash
@@ -124,13 +122,37 @@ jobs:
         # Clear -fno-exceptions in rtconfig.py
         sed -i 's/-fno-exceptions/ /g' $TEST_BSP_ROOT/rtconfig.py
 
+
     - name: Build BSP
       run: |
+        source ~/.env/env.sh
         echo CONFIG_RT_USING_UTESTCASES=y >> $TEST_BSP_ROOT/.config
         cat examples/utest/configs/$TEST_CONFIG_FILE >> $TEST_BSP_ROOT/.config
         scons --pyconfig-silent -C $TEST_BSP_ROOT
+        sed -i "s/# CONFIG_PKG_USING_RTT_AUTO_EXE_CMD is not set/CONFIG_PKG_USING_RTT_AUTO_EXE_CMD=y/g" $TEST_BSP_ROOT/.config
+        scons --pyconfig-silent -C $TEST_BSP_ROOT
+        sed -i "s/CONFIG_RTT_CMD_1_STR=\"version\"/CONFIG_RTT_CMD_1_STR=\"utest_run\"/g" $TEST_BSP_ROOT/.config
+        scons --pyconfig-silent -C $TEST_BSP_ROOT
+        pushd $TEST_BSP_ROOT && pkgs --update && popd
         scons -j$(nproc) --strict -C $TEST_BSP_ROOT
-
+        mkdir ${{ github.workspace }}/exe
+        cp -r $TEST_BSP_ROOT ${{ github.workspace }}/exe/
+        scons --dist -C $TEST_BSP_ROOT
+        cp $TEST_BSP_ROOT/dist/project.zip ${{ github.workspace }}/exe/
+        scons --dist -C $TEST_BSP_ROOT
+        
+        pwd
+        cd bsp/qemu-vexpress-a9
+        ls
+        sudo nohup ./qemu-nographic.sh > cmd3.out 2>&1 &
+        sleep 100
+        cat cmd3.out
+        
+    - uses: actions/upload-artifact@v3
+      with:
+        name: exe
+        path: ${{ github.workspace }}/exe/*
+        
     - name: Start run Test
       if: ${{matrix.legs.RUN == 'yes' && success() }}
       run: |
