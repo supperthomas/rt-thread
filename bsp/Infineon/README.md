@@ -1,4 +1,4 @@
-# Infineon-PSOC6 BSP 说明 
+# Infineon-PSOC6 BSP 说明   
 
 PSOC6 系列 BSP 目前支持情况如下表所示：
 
