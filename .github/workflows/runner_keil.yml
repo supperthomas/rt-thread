@@ -62,7 +62,7 @@ jobs:
           echo $RTT_BSP
           cd bsp/stm32/stm32l496-st-nucleo
           UV4.exe -b project.uvprojx -q -j0 -t rt-thread -o test.log
-          scons --target=mdk5
+          #scons --target=mdk5
           ls
           sleep 10
           cat test.log
