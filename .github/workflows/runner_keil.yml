@@ -59,10 +59,22 @@ jobs:
           RTT_TOOL_CHAIN: ${{ github.event.inputs.bsp_tool_chain}}
         run: |
           ls
+          for dir in */; do
+            if [[ -d "$dir" ]]; then
+              echo "Entering directory: $dir"
+              cd "$dir" || { echo "Cannot cd to $dir"; continue; }
+              ls -l
+              cd ..
+            fi
+          done
           echo $RTT_BSP
-          cd bsp/stm32/stm32f103-blue-pill
-          UV4.exe -b project.uvprojx -q -j0 -t rt-thread -o test.log
-          scons --target=mdk5
-          ls
-          sleep 10
-          cat test.log
+          cd bsp/stm32
+          for dir in */; do
+            cd $dir
+            echo $dir
+            scons --target=mdk5
+            UV4.exe -b project.uvprojx -q -j0 -t rt-thread -o test.log
+            ls
+            sleep 10
+            cat test.log
+          done        
