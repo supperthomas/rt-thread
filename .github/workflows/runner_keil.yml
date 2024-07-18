@@ -59,14 +59,6 @@ jobs:
           RTT_TOOL_CHAIN: ${{ github.event.inputs.bsp_tool_chain}}
         run: |
           ls
-          for dir in */; do
-            if [[ -d "$dir" ]]; then
-              echo "Entering directory: $dir"
-              cd "$dir" || { echo "Cannot cd to $dir"; continue; }
-              ls -l
-              cd ..
-            fi
-          done
           echo $RTT_BSP
           cd bsp/stm32
           for dir in */; do
