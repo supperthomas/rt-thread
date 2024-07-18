@@ -18,7 +18,7 @@ on:
         description: 'Which bsp path Would you want dist in bsp?like stm32/stm32l496-st-nucleo '
         required: false
         type: string
-        default: 'stm32/stm32l496-st-nucleo'
+        default: 'stm32/stm32f103-blue-pill'
       bsp_tool_chain:
         description: 'Choice tool_chain'
         required: false
@@ -60,9 +60,9 @@ jobs:
         run: |
           ls
           echo $RTT_BSP
-          cd bsp/stm32/stm32l496-st-nucleo
+          cd bsp/stm32/stm32f103-blue-pill
           UV4.exe -b project.uvprojx -q -j0 -t rt-thread -o test.log
-          #scons --target=mdk5
+          scons --target=mdk5
           ls
           sleep 10
           cat test.log
