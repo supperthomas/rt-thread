@@ -62,11 +62,14 @@ jobs:
           echo $RTT_BSP
           cd bsp/stm32
           for dir in */; do
-            cd $dir
-            echo $dir
-            scons --target=mdk5
-            UV4.exe -b project.uvprojx -q -j0 -t rt-thread -o test.log
-            ls
-            sleep 10
-            cat test.log
+            if [ -d "$dir" ]; then
+              cd $dir
+              echo $dir
+              scons --target=mdk5
+              UV4.exe -b project.uvprojx -q -j0 -t rt-thread -o test.log
+              ls
+              sleep 10
+              cat test.log
+              cd ..
+            fi
           done        
