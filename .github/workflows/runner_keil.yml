@@ -1,13 +1,13 @@
 #
-# Copyright (c) 2006-2023, RT-Thread Development Team
+# Copyright (c) 2006-2024, RT-Thread Development Team
 #
 # SPDX-License-Identifier: Apache-2.0
 #
 # Change Logs:
 # Date           Author       Notes
-# 2023-07-01     Supperthomas the first version
+# 2024-07-19     LITAO        the first version
 #
-name:  runner_keil
+name:  action_runner
 
 # Controls when the action will run. Triggers 'scons --dist' to build the dist
 on:
@@ -15,33 +15,23 @@ on:
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onworkflow_dispatchinputs
     inputs:
       bsp_options:
-        description: 'Which bsp path Would you want dist in bsp?like stm32/stm32l496-st-nucleo '
+        description: 'Which bsp path Would you want dist in bsp?like stm32/stm32f103-blue-pill '
         required: false
         type: string
-        default: 'stm32/stm32f103-blue-pill'
+        default: 'stm32f103-blue-pill'
       bsp_tool_chain:
         description: 'Choice tool_chain'
         required: false
-        default: 'sourcery-arm'
+        default: 'KEIL'
         type: choice
         options:
-          - "sourcery-arm"
-          - "llvm-arm"
-          - "sourcery-aarch64"
-          - "sourcery-mips"
-          - "sourcery-riscv-none-embed"
-          - "sourcery-riscv64-unknown-elf"
-          - "gcc"
+          - "KEIL"
+          - "IAR"
       bsp_config:
-        description: 'Type a config you want mannual test in .config, like CONFIG_BSP_USING_I2C CONFIG_BSP_USING_WDT '
+        description: 'Type a config you want mannual test in .config, like: CONFIG_RT_USING_DEBUG=y,CONFIG_RT_DEBUGING_COLOR=y,CONFIG_RT_DEBUGING_CONTEXT=y'
         required: false
         type: string
-        default: 'CONFIG_BSP_USING_GPIO'
-      dist_flag:
-        description: 'True to dist all bsp, False not dist'
-        required: true
-        type: boolean
-        default: false
+        default: 'CONFIG_RT_USING_DEBUG=y,CONFIG_RT_DEBUGING_COLOR=y,CONFIG_RT_DEBUGING_CONTEXT=y'
 
 permissions:
   contents: read # to fetch code (actions/checkout)
@@ -60,9 +50,9 @@ jobs:
         run: |   
           ls
           echo $RTT_BSP
-          cd bsp/stm32/stm32f103-blue-pill
+          cd bsp/$RTT_BSP
           scons --target=mdk5
-          UV4.exe -b project.uvprojx -q -j0 -t rt-thread -o test.log
+          UV4.exe -b project.uvprojx -q -j0 -t rt-thread -o action_runner.log
           ls
           sleep 10
-          cat test.log
+          cat action_runner.log
