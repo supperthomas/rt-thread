@@ -44,6 +44,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Bsp Scons Compile
         if: ${{ success() }}
+        shell: bash
         env:
           RTT_BSP: ${{ github.event.inputs.bsp_options }}
           RTT_TOOL_CHAIN: ${{ github.event.inputs.bsp_tool_chain}}
