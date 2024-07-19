@@ -51,7 +51,8 @@ jobs:
         run: |   
           ls
           echo $RTT_BSP
-          cd bsp/stm32/stm32f103-blue-pill
+          cd bsp/$RTT_BSP
+          #cd bsp/stm32/stm32f103-blue-pill
           scons --target=mdk5
           UV4.exe -b project.uvprojx -q -j0 -t rt-thread -o action_runner.log
           ls
