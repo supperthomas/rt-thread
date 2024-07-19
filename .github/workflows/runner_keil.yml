@@ -18,7 +18,7 @@ on:
         description: 'Which bsp path Would you want dist in bsp?like stm32/stm32f103-blue-pill '
         required: false
         type: string
-        default: 'stm32f103-blue-pill'
+        default: 'stm32/stm32f103-blue-pill'
       bsp_tool_chain:
         description: 'Choice tool_chain'
         required: false
