@@ -51,10 +51,20 @@ jobs:
         run: |   
           ls
           echo $RTT_BSP
-          cd bsp/$RTT_BSP
+          #cd bsp/$RTT_BSP
           #cd bsp/stm32/stm32f103-blue-pill
-          scons --target=mdk5
-          UV4.exe -b project.uvprojx -q -j0 -t rt-thread -o action_runner.log
-          ls
-          sleep 10
-          cat action_runner.log
+          #scons --target=mdk5
+          #UV4.exe -b project.uvprojx -q -j0 -t rt-thread -o action_runner.log
+          #ls
+          #sleep 10
+          #cat action_runner.log
+          for subfolder in bsp/stm32/*/
+          do
+              if [ -d "$subfolder" ]; then
+                  cd "$subfolder"
+                  echo "Executing in $subfolder"
+                  echo
+                  cd -
+              fi
+          done
+          
