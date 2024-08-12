@@ -451,7 +451,7 @@ rt_err_t rt_thread_close(rt_thread_t thread)
 RTM_EXPORT(rt_thread_close);
 
 static rt_err_t _thread_detach(rt_thread_t thread);
-
+asdfasd
 /**
  * @brief   This function will detach a thread. The thread object will be removed from
  *          thread queue and detached/deleted from the system object management.
