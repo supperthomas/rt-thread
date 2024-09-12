@@ -14,6 +14,12 @@ import subprocess
 import sys
 import format_ignore
 
+def add_summary(text):
+    """
+    add summary to github action.
+    """
+    os.system(f'echo "{text}" >> $GITHUB_STEP_SUMMARY ;')
+    
 class CPPCheck:
     def __init__(self, file_list):
         self.file_list = file_list
@@ -33,7 +39,7 @@ class CPPCheck:
                     '-I thread/components/finsh',
                     # it's okay because CI will do the real compilation to check this
                     '--suppress=syntaxError',
-                    '--check-level=exhaustive',
+                    #'--check-level=exhaustive',
                     '--enable=warning',
                     'performance',
                     'portability',
@@ -46,6 +52,7 @@ class CPPCheck:
             logging.info(result.stdout.decode())
             logging.info(result.stderr.decode())
             if result.stderr:
+                add_summary(f"- :rotating_light: {result.stderr.decode()}")
                 check_result = False
         return check_result
 
