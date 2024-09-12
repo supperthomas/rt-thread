@@ -13,6 +13,7 @@ import logging
 import subprocess
 import sys
 import format_ignore
+import os
 
 def add_summary(text):
     """
