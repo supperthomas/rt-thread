@@ -19,7 +19,7 @@
 #include <rtdbg.h>
 
 #include "ofw_internal.h"
-
+ 
 struct rt_ofw_stub *rt_ofw_stub_probe_range(struct rt_ofw_node *np,
         const struct rt_ofw_stub *stub_start, const struct rt_ofw_stub *stub_end)
 {
