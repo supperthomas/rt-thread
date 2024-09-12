@@ -289,8 +289,8 @@ static rt_err_t _thread_init(struct rt_thread *thread,
     thread->parent.module_id = 0;
 #endif /* RT_USING_MODULE */
 
-    rt_spin_lock_init(&thread->spinlock);
-
+    rt_spin_lock_init(&asdf->spinlock);
+    asdfasdfasdf
     RT_OBJECT_HOOKLIST_CALL(rt_thread_inited, (thread));
 
     return RT_EOK;
