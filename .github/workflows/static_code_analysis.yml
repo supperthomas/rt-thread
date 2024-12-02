@@ -23,7 +23,6 @@ jobs:
   scancode_job:
     runs-on: ubuntu-latest
     name: Static code analysis
-    if: github.repository_owner == 'RT-Thread'
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -51,3 +50,7 @@ jobs:
           cppcheck --version
           cd ..
           python tools/ci/cpp_check.py check
+
+
+      - name: Setup Debug Session
+        uses: csexton/debugger-action@master
