@@ -1,0 +1,168 @@
+#! armcc -E
+#include "..\vpla_mem.h"
+
+LOAD_ROM VDEV_BT_FLASH_BASE VDEV_BT_FLASH_SIZE
+{
+ ;; Vector table must be placed in address 0x0
+ 
+
+ 
+  ;; ROM Code
+  CODE VDEV_BT_FLASH_BASE VDEV_BT_FLASH_SIZE
+  {
+	  * (VECTOR_TABLE, +FIRST)
+	  * (+RO)
+  }
+#if ((CONFIG_DEBUG_TYPE == DEBUG_LOG_NEW_TYPE) && !defined(RELEASE_BUILD))
+  LOGING_CONST AlignExpr(ImageLimit(CODE),4)
+  {
+	 * (__log_const_static)
+  }
+  
+  LOG_PACKET_INFO AlignExpr(ImageLimit(LOGING_CONST),4)
+  {
+	* (log_pack_info)
+  }
+#endif
+  DATA  VDEV_BT_RAM_BASE VDEV_BT_RAM_SIZE
+  { 
+    ;;* (MODIFY_VECTOR_TABLE,+FIRST)
+    * (+RW, +ZI)
+  }
+;  RTT_DATA  VDEV_RTT_RAM_BASE VDEV_RTT_RAM_SIZE
+;  { 
+;	* (rtt_area_section)
+;  }
+ 
+  ;; Heap starts at "VDEV_HEAP_BASE" and grows "VDEV_HEAP_SIZE"
+  ARM_LIB_HEAP VDEV_HEAP_BASE EMPTY VDEV_HEAP_SIZE
+  {
+  }
+
+  ;; Stack starts at "VDEV_STACK_BASE"
+  ;; And grows downwards for "VDEV_STACK_SIZE"
+  ARM_LIB_STACK VDEV_STACK_BASE EMPTY -VDEV_STACK_SIZE
+  {
+  }
+   
+}
+
+LOAD_CODE VDEV_CODERAM_BASE VDEV_CODERAM_SIZE
+{
+  CODERAM VDEV_CODERAM_BASE 
+  {
+	cpu_a.o (+RO)
+	;cpu_core.o (+RO)
+	hw_codec.o (+RO)
+	;hw_delay.o (+RO)
+	hw_delay.o (i.HWdelay_Wait_For_us)
+	hw_lc.o (+RO)
+	hw_modem_va9613i.o (+RO)
+	hw_radio_va9613imp.o (+RO)
+	
+	lslc_access.o (+RO)
+	lslc_afh.o (+RO)
+	lslc_assmnt.o (+RO)
+	lslc_class.o (+RO)
+	;lslc_clk.o (+RO)
+	lslc_freq.o (+RO)
+	lslc_hop.o (+RO)
+	;lslc_irq.o (+RO)
+	lslc_irq.o (i.LSLCirq_IRQ_Handler)
+	lslc_pkt.o (+RO)
+	lslc_slot.o  (+RO)
+	lslc_stat.o  (+RO)
+        le_lslc_adv.o (i.LE_LSLC_ProcessRx)     
+	le_lslc_adv.o (i.LE_Update_RSSI_Average)   
+	le_lslc_adv.o (i.LE_LSLC_ClrAckPending)   
+	le_lslc_adv.o (i.LE_LSLC_LcpRxCompleted) 		            
+        le_bba.o (i.LE_BBA_ExtractHeader)
+        le_bba.o (i.LE_BBA_ExtractPayload)
+	le_bba.o (i.LE_BBA_Decrypt_Pdu)	
+        le_bba.o(i.LE_BBA_Interrupt_Routine_Service)  
+	
+	le_link_container.o (i.LE_LCNTR_GetCurrentLinkIdx)  
+	le_lm_afh.o (i.LE_AFH_Process_CRC_Error)
+	le_lm_lcp.o (i.LE_LCP_Opcode2Procedure)
+	le_lm_lcp.o (i.LE_LCP_IsProcedureValid)
+	le_lm_lcp.o (i.LE_LCP_SetAckPending)
+	le_lm_lcp.o (i.LE_LCP_ClrAckPending)
+	
+	tra_queue.o (i.BTq_Enqueue)
+        tra_queue.o (i.BTq_Commit)  
+	 
+	os_core.o  (+RO)
+	os_cpu_a.o  (+RO)
+	os_cpu_c.o  (+RO)
+	os_q.o     (+RO)
+	os_sem.o   (+RO)
+	os_task.o  (+RO)
+	os_tick.o (+RO)
+	os_time.o (+RO)
+	;os_tmr.o (+RO)
+	 
+	uslc_chan_ctrl.o (+RO)
+	;uslc_inquiry.o (+RO)
+	uslc_inquiry.o (i.USLCinq_Is_Extended_Inquiry_Response_Frame) 
+	;uslc_inquiryscan.o  (+RO)
+	;uslc_master_slave_switch.o  (+RO)
+	;uslc_page.o     (+RO)
+	;uslc_pagescan.o   (+RO)
+	;uslc_return_to_piconet.o   (+RO)
+	uslc_scheduler.o  (+RO)
+	;uslc_sleep.o    (+RO)
+	uslc_switch_piconet.o  (+RO)
+	;uslc_sync_train.o    (+RO)
+	uslc_sync_train.o (i.USLCsync_Get_CSB_Instant)
+	;uslc_synchronization_train_scan.o  (+RO)
+	 
+	;vlist.o         (+RO)
+	vnvic_interrupt.o   (+RO)
+	isr.o      (+RO)
+	vnvic_system.o   (+RO)
+	;vspi_anatest.o  (+RO)
+	;vsys_dsp.o    (+RO)
+	;vsys_ipc.o    (+RO)
+	;vsys_ipc_evt.o  (+RO)
+	;vsys_ipc_lock.o   (+RO)
+	;vsys_ipc_msg.o   (+RO)
+	;vsys_ipc_pool.o  (+RO)
+	vsys_mem.o     (+RO)
+	vsys_mem_tlsf.o  (+RO)
+    sys_irq.o	(+RO)
+	vreg_def.o (+RO)
+	vstdlib.o (+RO)
+	dsp_bt_audio.o (+RO)
+	vdrv_dma.o (+RO)
+	dsp_task.o (+RO)
+	dsp_mem.o (+RO)
+	vsys_message.o (+RO)
+	;dsp_message_transfer.o (+RO)
+	vdrv_mbox.o (+RO)
+	;vsys_config.o (+RO)
+	
+	vdebug_rtt.o(+RO)
+	SEGGER_RTT.o(+RO)
+	vcom_init_bt.o (+RO)
+  }
+}
+
+#if ((CONFIG_DEBUG_TYPE == DEBUG_LOG_NEW_TYPE) && !defined(RELEASE_BUILD))
+LOG_TRACE VDEV_LOG_TRACE_VIRTUAL_BASE VDEV_LOG_TRACE_VIRTUAL_SIZE
+{
+	LogTrace.bin  VDEV_LOG_TRACE_VIRTUAL_BASE
+	{
+		* (log_point_info)
+	}
+	
+	FORMAT_STRING AlignExpr(ImageLimit(LogTrace.bin),16) ALIGN 16
+	{
+		* (const_string)
+	}
+	
+	VERSION_INFO AlignExpr(ImageLimit(FORMAT_STRING),4)
+	{
+		* (version_info)
+	}
+}
+#endif

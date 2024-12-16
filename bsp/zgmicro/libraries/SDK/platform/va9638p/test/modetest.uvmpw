@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<ProjectWorkspace xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_mpw.xsd">
+
+  <SchemaVersion>1.0</SchemaVersion>
+
+  <Header>### uVision Project, (C) Keil Software</Header>
+
+  <WorkspaceName>WorkSpace</WorkspaceName>
+
+  <project>
+    <PathAndName>.\gpio_test\gpio_test.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\uart_test\uart_test.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\timer_test\timer_test.uvproj</PathAndName>
+    <NodeIsActive>1</NodeIsActive>
+  </project>
+
+  <project>
+    <PathAndName>.\ucos_test\ucos_test.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\spi_test\spi_test.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\i2c_test\i2c_test.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\led_test\led_test.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\api_test\api_test.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\rtt_test\rtt_test.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\osipc_test\osipc_test.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\msgbox_test\msgbox_test.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\freertos_test\freertos_test.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\coroutine_test\coroutine_test.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\dsp_test\dsp_test.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\76xx_test\76xx_test.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\lcd_test\lcd_test.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\iis_test\iis_test.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\7638Xiisdsp_test\7638Xiisdsp.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\cdc_test\cdc_test.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\dspcore_test\dspcore_test.uvproj</PathAndName>
+  </project>
+
+</ProjectWorkspace>

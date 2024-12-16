@@ -1,0 +1,58 @@
+import rtconfig
+Import('RTT_ROOT')
+from building import *
+
+# get current directory
+cwd = GetCurrentDir()
+
+# The set of source files associated with this SConscript file.
+src = Split("""
+platform/va9638p/plat/plat_demo/vstdcore.c
+platform/va9638p/plat/plat_demo/vstddrv.c
+platform/va9638p/plat/plat_demo/plat_drv/vpla_ckm.c
+platform/va9638p/plat/plat_demo/plat_drv/vpla_uart.c
+platform/va9638p/plat/plat_demo/plat_drv/vpla_timer.c
+platform/va9638p/plat/plat_demo/plat_drv/vpla_gpio.c
+platform/va9638p/chip/driver/source/vdrv_ckm.c
+platform/va9638p/chip/driver/source/vdrv_dma.c
+platform/va9638p/chip/driver/source/vdrv_gpio.c
+platform/va9638p/chip/driver/source/vdrv_mbox.c
+platform/va9638p/chip/driver/source/vdrv_mem.c
+platform/va9638p/chip/driver/source/vdrv_timer.c
+platform/va9638p/chip/driver/source/vdrv_uart.c
+platform/va9638p/chip/driver/source/vdrv_wd.c
+platform/va9638p/chip/driver/source/vdrv_spi.c
+platform/va9638p/chip/device/vdrv_spiflash.c
+
+platform/va9638p/chip/core/vnvic_fpb.c
+platform/va9638p/chip/core/vnvic_interrupt.c
+platform/va9638p/chip/core/cpu_core.asm
+platform/va9638p/chip/core/vnvic_system.c
+
+vcomlib/vstdio/vstdio.c
+vcomlib/vstdio/vdebug.c
+vcomlib/vstdio/vdebug_assert.c
+vcomlib/vstdio/vdebug_uart.c
+vcomlib/vstdlib/vstdlib.c
+vcomlib/vstdlib/vstdlib_vsprintf.c
+
+""")
+
+path = [cwd, cwd + '/platform/va9638p/chip/core',
+cwd + '/platform/va9638p/chip/driver/include',
+cwd + '/platform/va9638p/chip/driver/reg',
+cwd + '/platform/va9638p/chip/device',
+cwd + '/platform/va9638p/chip/core',
+cwd + '/platform/va9638p/plat/plat_demo/plat_drv',
+cwd + '/platform/va9638p/plat/plat_demo/plat_dev',
+cwd + '/platform/va9638p/plat/plat_demo/map_boot',
+cwd + '/cfg/cfg_test',
+cwd + '/platform/va9638p/test',
+cwd + '/vcomlib/vstdlib',
+cwd + '/vcomlib/vstdio',
+]
+
+CPPDEFINES = ['CORE_SEL_MCUTOP']
+group = DefineGroup('Libraries', src, depend = [''], CPPPATH = path, CPPDEFINES = CPPDEFINES)
+
+Return('group')

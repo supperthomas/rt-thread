@@ -2,8 +2,6 @@ import os
 import rtconfig
 from building import *
 
-Import('SDK_LIB')
-
 cwd = GetCurrentDir()
 
 # add general drivers
@@ -13,9 +11,5 @@ board.c
 
 path =  [cwd]
 
-startup_path_prefix = SDK_LIB
-
-# You can select chips from the list above
-
-group = DefineGroup('Drivers', src, depend = [''], CPPPATH = path, CPPDEFINES = CPPDEFINES)
+group = DefineGroup('Drivers', src, depend = [''], CPPPATH = path)
 Return('group')

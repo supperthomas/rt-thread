@@ -43,7 +43,10 @@ def _get_filetype(fn):
     # assemble file type
     if fn.rfind('.s') != -1 or fn.rfind('.S') != -1:
         return 2
-
+        
+    if fn.rfind('.asm') != -1 or fn.rfind('.ASM') != -1:
+        return 2
+        
     # header type
     if fn.rfind('.h') != -1:
         return 5

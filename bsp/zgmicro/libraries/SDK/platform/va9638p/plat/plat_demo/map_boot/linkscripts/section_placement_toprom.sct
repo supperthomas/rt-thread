@@ -1,0 +1,38 @@
+#! armcc -E
+#include "..\vpla_mem.h"
+
+
+LOAD_ROM VDEV_TOP_ROM_BASE VDEV_TOP_ROM_SIZE
+;;LOAD_ROM VDEV_ROM_BASE (0x400000+VDEV_ROM_SIZE)
+;;LOAD_ROM VDEV_CODERAM_BASE VDEV_CODERAM_SIZE
+{
+ ;; Vector table must be placed in address 0x0
+ 
+
+ 
+  ;; ROM Code
+  CODE VDEV_TOP_ROM_BASE VDEV_TOP_ROM_SIZE
+  {
+	  * (VECTOR_TABLE, +FIRST)
+	  * (+RO)
+  }
+
+ 
+  DATA  VDEV_RAM_BASE VDEV_RAM_SIZE
+  { 
+    ;; vnvic_isr.o (MODIFY_VECTOR_TABLE,+FIRST)
+    * (+RW, +ZI)
+  }
+  
+  ;; Heap starts at "VDEV_HEAP_BASE" and grows "VDEV_HEAP_SIZE"
+  ARM_LIB_HEAP VDEV_HEAP_BASE EMPTY VDEV_HEAP_SIZE
+  {
+  }
+
+  ;; Stack starts at "VDEV_STACK_BASE"
+  ;; And grows downwards for "VDEV_STACK_SIZE"
+  ARM_LIB_STACK VDEV_STACK_BASE EMPTY -VDEV_STACK_SIZE
+  {
+  }
+   
+}

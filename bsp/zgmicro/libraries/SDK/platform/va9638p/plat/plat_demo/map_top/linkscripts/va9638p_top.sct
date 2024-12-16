@@ -1,0 +1,77 @@
+#! armcc -E
+#include "..\vpla_mem.h"
+
+
+LOAD_ROM VDEV_TOP_FLASH_BASE VDEV_TOP_FLASH_SIZE
+{
+ ;; Vector table must be placed in address 0x0
+ 
+  ;; ROM Code
+  CODE VDEV_TOP_FLASH_BASE
+  {
+	  * (VECTOR_TABLE, +FIRST)
+	  * (+RO)
+  }
+  
+#if ((CONFIG_DEBUG_TYPE == DEBUG_LOG_NEW_TYPE) && !defined(RELEASE_BUILD))
+  LOGING_CONST AlignExpr(ImageLimit(CODE),4)
+  {
+	 * (__log_const_static)
+  }
+  
+  LOG_PACKET_INFO AlignExpr(ImageLimit(LOGING_CONST),4)
+  {
+	* (log_pack_info)
+  }
+ 
+#endif
+	
+  DATA  VDEV_TOP_RAM_BASE VDEV_TOP_RAM_SIZE
+  { 
+    ;;* (MODIFY_VECTOR_TABLE,+FIRST)
+    * (+RW, +ZI)
+	* (RamCode)
+  }
+  
+;  RTT_DATA  VDEV_RTT_RAM_BASE VDEV_RTT_RAM_SIZE
+;  { 
+;	* (rtt_area_section)
+;  }
+  
+;  NEW_MEM_DATA  VDEV_TOP_NEW_RAM_BASE VDEV_TOP_NEW_RAM_SIZE
+;  { 
+;	* (new_mem_area_section)
+;  }
+ 
+  ;; Heap starts at "VDEV_HEAP_BASE" and grows "VDEV_HEAP_SIZE"
+  ARM_LIB_HEAP VDEV_HEAP_BASE EMPTY VDEV_HEAP_SIZE
+  {
+  }
+
+  ;; Stack starts at "VDEV_STACK_BASE"
+  ;; And grows downwards for "VDEV_STACK_SIZE"
+  ARM_LIB_STACK VDEV_STACK_BASE EMPTY -VDEV_STACK_SIZE
+  {
+  }
+   
+}
+
+#if ((CONFIG_DEBUG_TYPE == DEBUG_LOG_NEW_TYPE) && !defined(RELEASE_BUILD))
+LOG_TRACE VDEV_LOG_TRACE_VIRTUAL_BASE VDEV_LOG_TRACE_VIRTUAL_SIZE
+{
+	LogTrace.bin  VDEV_LOG_TRACE_VIRTUAL_BASE
+	{
+		* (log_point_info)
+	}
+	
+	FORMAT_STRING AlignExpr(ImageLimit(LogTrace.bin),16) ALIGN 16
+	{
+		* (const_string)
+	}
+	
+	VERSION_INFO AlignExpr(ImageLimit(FORMAT_STRING),4)
+	{
+		* (version_info)
+	}
+}
+#endif
