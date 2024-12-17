@@ -190,8 +190,6 @@ menu "On-chip Peripheral Drivers"
         select RT_USING_USB_DEVICE
         default n
 
-    source "$(BSP_DIR)/../libraries/HAL_Drivers/drivers/Kconfig"
-
 endmenu
 
 menu "Board extended module Drivers"

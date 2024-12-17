@@ -15,7 +15,6 @@ config SOC_STM32F103C8
 
 source "$(RTT_DIR)/Kconfig"
 osource "$PKGS_DIR/Kconfig"
-rsource "../libraries/Kconfig"
 
 if !RT_USING_NANO
 rsource "board/Kconfig"

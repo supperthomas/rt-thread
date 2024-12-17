@@ -107,15 +107,11 @@
 #define RT_VER_NUM 0x50200
 #define RT_BACKTRACE_LEVEL_MAX_NR 32
 /* end of RT-Thread Kernel */
-#define RT_USING_HW_ATOMIC
-#define RT_USING_CPU_FFS
-#define ARCH_ARM
-#define ARCH_ARM_CORTEX_M
-#define ARCH_ARM_CORTEX_M3
 
 /* RT-Thread Components */
 
 #define RT_USING_COMPONENTS_INIT
+#define RT_USING_USER_MAIN
 #define RT_MAIN_THREAD_STACK_SIZE 2048
 #define RT_MAIN_THREAD_PRIORITY 10
 #define RT_USING_MSH
@@ -318,7 +314,5 @@
 
 /* end of Arduino libraries */
 /* end of RT-Thread online packages */
-#define SOC_FAMILY_STM32
-#define SOC_SERIES_STM32F1
 
 #endif
