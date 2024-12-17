@@ -10,7 +10,13 @@ path += [os.path.join(cwd, 'CMSIS', 'Include')]
 
 if GetDepend(['RT_USING_CONSOLE']):
     src += ['drv_console.c']
-
+    
+if GetDepend(['RT_USING_PIN']):
+    src += ['drv_gpio.c']
+    
+if GetDepend(['RT_USING_SERIAL']):
+    src += ['drv_uart.c']
+    
 group = DefineGroup('Drivers', src, depend = [''], CPPPATH = path)
 
 Return('group')

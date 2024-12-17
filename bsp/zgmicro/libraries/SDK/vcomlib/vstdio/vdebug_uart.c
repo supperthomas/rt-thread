@@ -185,11 +185,12 @@ void vputs(char *str)
         VUART_CharTxWithBlocking((UINT8)*str++);
     }
 }
-
+#if 0 //THOMAS
 void _ttywrch(int ch) 
 {
     VUART_CharTxWithBlocking((UINT8)ch);
 }
+#endif
 
 void VDBG_DrvInit(void)
 {

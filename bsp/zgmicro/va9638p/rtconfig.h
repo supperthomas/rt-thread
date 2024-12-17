@@ -1,7 +1,7 @@
 #ifndef RT_CONFIG_H__
 #define RT_CONFIG_H__
 
-#define SOC_STM32F103C8
+#define SOC_VA9638P
 
 /* RT-Thread Kernel */
 
@@ -64,7 +64,6 @@
 /* end of rt_strnlen options */
 /* end of klibc options */
 #define RT_NAME_MAX 8
-#define RT_USING_NANO
 #define RT_CPUS_NR 1
 #define RT_ALIGN_SIZE 8
 #define RT_THREAD_PRIORITY_32
@@ -101,9 +100,10 @@
 #define RT_USING_SMALL_MEM_AS_HEAP
 #define RT_USING_HEAP
 /* end of Memory Management */
+#define RT_USING_DEVICE
 #define RT_USING_CONSOLE
 #define RT_CONSOLEBUF_SIZE 128
-#define RT_CONSOLE_DEVICE_NAME "uart1"
+#define RT_CONSOLE_DEVICE_NAME "uart"
 #define RT_VER_NUM 0x50200
 #define RT_BACKTRACE_LEVEL_MAX_NR 32
 /* end of RT-Thread Kernel */
@@ -128,6 +128,58 @@
 #define FINSH_USING_DESCRIPTION
 #define FINSH_ARG_MAX 10
 #define FINSH_USING_OPTION_COMPLETION
+
+/* DFS: device virtual file system */
+
+/* end of DFS: device virtual file system */
+
+/* Device Drivers */
+
+#define RT_USING_DEVICE_IPC
+#define RT_UNAMED_PIPE_NUMBER 64
+#define RT_USING_SERIAL
+#define RT_USING_SERIAL_V1
+#define RT_SERIAL_USING_DMA
+#define RT_SERIAL_RB_BUFSZ 64
+#define RT_USING_PIN
+/* end of Device Drivers */
+
+/* C/C++ and POSIX layer */
+
+/* ISO-ANSI C layer */
+
+/* Timezone and Daylight Saving Time */
+
+#define RT_LIBC_USING_LIGHT_TZ_DST
+#define RT_LIBC_TZ_DEFAULT_HOUR 8
+#define RT_LIBC_TZ_DEFAULT_MIN 0
+#define RT_LIBC_TZ_DEFAULT_SEC 0
+/* end of Timezone and Daylight Saving Time */
+/* end of ISO-ANSI C layer */
+
+/* POSIX (Portable Operating System Interface) layer */
+
+
+/* Interprocess Communication (IPC) */
+
+
+/* Socket is in the 'Network' category */
+
+/* end of Interprocess Communication (IPC) */
+/* end of POSIX (Portable Operating System Interface) layer */
+/* end of C/C++ and POSIX layer */
+
+/* Network */
+
+/* end of Network */
+
+/* Memory protection */
+
+/* end of Memory protection */
+
+/* Utilities */
+
+/* end of Utilities */
 
 /* Using USB legacy version */
 
@@ -199,6 +251,16 @@
 
 /* tools packages */
 
+#define PKG_USING_SEGGER_RTT
+#define SEGGER_RTT_ENABLE
+#define SEGGER_RTT_MAX_NUM_UP_BUFFERS 3
+#define SEGGER_RTT_MAX_NUM_DOWN_BUFFERS 3
+#define BUFFER_SIZE_UP 1024
+#define BUFFER_SIZE_DOWN 16
+#define SEGGER_RTT_PRINTF_BUFFER_SIZE 64
+#define RTT_DEFAULT_BUFFER_INDEX 0
+#define RTT_DEFAULT_TERMINAL_INDEX 0
+#define PKG_USING_SEGGER_RTT_LATEST_VERSION
 /* end of tools packages */
 
 /* system packages */
@@ -314,5 +376,23 @@
 
 /* end of Arduino libraries */
 /* end of RT-Thread online packages */
+
+/* Hardware Drivers Config */
+
+/* Onboard Peripheral Drivers */
+
+#define BSP_USING_USB_TO_USART
+/* end of Onboard Peripheral Drivers */
+
+/* On-chip Peripheral Drivers */
+
+#define BSP_USING_GPIO
+#define BSP_USING_UART
+#define BSP_USING_UART1
+/* end of On-chip Peripheral Drivers */
+
+/* Board extended module Drivers */
+
+/* end of Hardware Drivers Config */
 
 #endif

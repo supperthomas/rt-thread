@@ -6,9 +6,8 @@ RTT_DIR := ../../..
 
 PKGS_DIR := packages
 
-config SOC_STM32F103C8
+config SOC_VA9638P
     bool
-    select SOC_SERIES_STM32F1
     select RT_USING_COMPONENTS_INIT
     select RT_USING_USER_MAIN
     default y

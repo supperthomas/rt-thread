@@ -12,6 +12,9 @@
 #include <stdint.h>
 #include "rtthread.h"
 #include "rthw.h"
+#include "drv_gpio.h"
+#include "drv_uart.h"
+
 #define ALLOW_VKERNEL_INTERNAL_INCLUDES
 #include "vstdlib.h"
 #include "vstdio.h"
@@ -22,10 +25,6 @@
 #include "vdrv_gpio.h"
 #include "vreg_def.h"
 #include "vnvic_system.h"
-
-void SystemClock_Config(void)
-{
-}
 
 uint8_t heap_size[10240*5];
 
@@ -42,6 +41,24 @@ void rt_hw_board_init(void)
     rt_system_heap_init((void *)&heap_size[0], (void *)&heap_size[10240*5-1]);
 #endif
 	
+#ifdef RT_USING_PIN
+    rt_hw_pin_init();
+#endif
+	
+#ifdef RT_USING_SERIAL
+    rt_hw_uart_init();
+#endif
+	
+#if defined(RT_USING_CONSOLE) && defined(RT_USING_DEVICE)
+    #ifdef SEGGER_RTT_ENABLE
+        extern int rt_hw_jlink_rtt_init(void);
+        rt_hw_jlink_rtt_init();
+        rt_console_set_device("jlinkRtt");
+    #else
+        rt_console_set_device(RT_CONSOLE_DEVICE_NAME);
+    #endif
+#endif
+
 #if defined(RT_USING_CONSOLE) && defined(RT_USING_NANO)
     extern void rt_hw_console_init(void);
     rt_hw_console_init();
