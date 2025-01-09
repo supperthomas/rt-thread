@@ -36,3 +36,16 @@ jobs:
           set-executionpolicy remotesigned
           .\install_windows.ps1
           scons --version
+    - name: Install Arm ToolChains
+      if: ${{ success() }}
+      shell: powershell
+      run: |
+        wget -q https://github.com/RT-Thread/toolchains-ci/releases/download/v1.3/gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
+        tar -xjf gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2 -C C:\opt
+        C:\opt\gcc-arm-none-eabi-10-2020-q4-major\bin\arm-none-eabi-gcc --version
+        $env:RTT_EXEC_PATH = "C:\opt\gcc-arm-none-eabi-10-2020-q4-major\bin"
+
+    - name: Build Tools
+      run: |
+        scons --pyconfig-silent -C $TEST_BSP_ROOT
+        scons -j$(nproc) -C $TEST_BSP_ROOT
