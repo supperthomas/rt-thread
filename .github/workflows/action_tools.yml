@@ -34,7 +34,7 @@ jobs:
   test:
     runs-on: ubuntu-22.04
     name: Tools
-    if: github.repository_owner == 'RT-Thread'
+    #if: github.repository_owner == 'RT-Thread'
     strategy:
       fail-fast: false
     env:
@@ -60,7 +60,9 @@ jobs:
 
     - name: Build Tools
       run: |
-        scons --pyconfig-silent -C $TEST_BSP_ROOT
+        scons --pyconfig-silent -C $TEST_BSP_ROOT 2>menuconfig.log
+        sed 's/warning/error/gI' menuconfig.log > menuconfig.error.log
+        cat menuconfg.error.log
         scons -j$(nproc) -C $TEST_BSP_ROOT
 
     - name: Project generate Tools
