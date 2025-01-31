@@ -47,7 +47,7 @@ jobs:
           chmod 777 install_ubuntu.sh
           ./install_ubuntu.sh
 
-    - name: Install Arm ToolChains
+    - name: Install Arm ToolChains dd
       if: ${{ success() }}
       shell: bash
       run: |
