@@ -61,7 +61,7 @@ jobs:
     - name: Build Tools
       run: |
         scons --pyconfig-silent -C $TEST_BSP_ROOT 2>menuconfig.log
-        sed 's/warning/error/gI' menuconfig.log > menuconfig.error.log
+        sed 's/warning/::error::/gI' menuconfig.log > menuconfig.error.log
         cat menuconfig.error.log
         scons -j$(nproc) -C $TEST_BSP_ROOT
 
