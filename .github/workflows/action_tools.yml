@@ -35,8 +35,6 @@ jobs:
     runs-on: ubuntu-22.04
     name: Tools
     #if: github.repository_owner == 'RT-Thread'
-    strategy:
-      fail-fast: false
     env:
       TEST_BSP_ROOT: bsp/stm32/stm32f407-atk-explorer
     steps:
