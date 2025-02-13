@@ -53,9 +53,9 @@ jobs:
     runs-on: ubuntu-22.04
     name: ${{ github.event.inputs.bsp_options }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@main
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@main
         with:
           python-version: 3.8
 
@@ -152,17 +152,15 @@ jobs:
           config=${{ github.event.inputs.bsp_config}}
           echo "$config"
           echo "$config" >> bsp/$RTT_BSP/.config
-          insert_code="env.Tool('compilation_db')\nenv.CompilationDatabase()\n"
-          sed -i "/DoBuilding(TARGET, objs)/i $insert_code" bsp/$RTT_BSP/SConstruct
           scons -C bsp/$RTT_BSP --pyconfig-silent
           pushd bsp/$RTT_BSP && pkgs --update && popd
           cat bsp/$RTT_BSP/.config
-          scons -C bsp/$RTT_BSP -j$(nproc) 
+          scons -C bsp/$RTT_BSP -j$(nproc) --cdb
           ls bsp/$RTT_BSP
-          cppcheck --project=bsp/$RTT_BSP/compile_commands.json 
+          cppcheck --project=bsp/$RTT_BSP/build/compile_commands.json 
           pwd
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@main
         if:  ${{ github.event.inputs.dist_flag }} 
         with:
           name: dist_file
