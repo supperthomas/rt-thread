@@ -11,7 +11,7 @@
 *.cc text
 *.cpp text
 *.cxx text
-*.h text
+*.h text   
 *.htm text
 *.html text
 *.in text
