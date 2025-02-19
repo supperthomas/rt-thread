@@ -17,4 +17,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ANGUAGE: Chinese
-          MODEL: gpt-3.5-turbo
+          IGNORE_PATTERNS: /placeholder
+          INCLUDE_PATTERNS: "*.*"
