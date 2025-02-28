@@ -6,7 +6,7 @@
 
 #define SOC_STM32F091RC
 #define BOARD_STM32F091_NUCLEO
-
+   
 /* RT-Thread Kernel */
 
 #define RT_NAME_MAX 8
