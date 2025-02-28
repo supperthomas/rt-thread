@@ -417,9 +417,27 @@ jobs:
         env:
           ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
+          # 初始化变量
+          declare -a BSP_DIRECTORIES
+          
+          # 遍历所有发生变化的文件
           for file in ${ALL_CHANGED_FILES}; do
-            echo "$file was changed"
+            # 判断文件路径是否包含 'bsp/' 并且是 'bsp' 的一级子目录
+            if [[ "$file" == bsp/*/* && "$file" != *\/\/* ]]; then
+              # 提取 'bsp/' 后的第一级目录（假设路径格式为 bsp/xxx/yyy/...）
+              bsp_dir=$(dirname "$file" | awk -F'/' '{print $1 "/" $2}')
+              echo "Extracted BSP directory: $bsp_dir"
+              
+              # 添加到数组中（如果不存在）
+              if [[ ! " ${BSP_DIRECTORIES[@]} " =~ " ${bsp_dir} " ]]; then
+                BSP_DIRECTORIES+=("$bsp_dir")
+              fi
+            fi
           done
+
+          # 将结果暴露出去
+          IFS=, # 设置分隔符为逗号
+          echo "bsp_directories=${BSP_DIRECTORIES[*]}" >> $GITHUB_ENV
           
       - name: Install Tools
         shell: bash
@@ -525,6 +543,7 @@ jobs:
           RTT_TOOL_CHAIN: ${{ matrix.legs.RTT_TOOL_CHAIN }}
           SRTT_BSP: ${{ join(matrix.legs.SUB_RTT_BSP, ',') }}
         run: |
+          echo "Detected BSP directories: ${{ env.bsp_directories }}"
           source ~/.env/env.sh
           python tools/ci/bsp_buildings.py
 
