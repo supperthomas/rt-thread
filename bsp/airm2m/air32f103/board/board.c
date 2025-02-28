@@ -7,7 +7,7 @@
  * Date           Author       Notes
  * 2022-02-22     airm2m       first version
  */
-
+   
 #include "board.h"
 
 void SystemClock_Config(void)
