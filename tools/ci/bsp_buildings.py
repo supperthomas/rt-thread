@@ -72,7 +72,7 @@ def build_bsp(bsp, scons_args=''):
         nproc = multiprocessing.cpu_count()
         os.chdir(rtt_root)
 
-        cmd = f'scons -C bsp/{bsp} -j{nproc} {scons_args}'
+        cmd = f'scons -C bsp/{bsp} -j8 {scons_args}'
        # 记录 scons 开始时间
         start_time = time.time()
         __, res = run_cmd(cmd, output_info=True)
