@@ -81,7 +81,7 @@ def build_bsp(bsp, scons_args=''):
 
         if res != 0:
             success = False
-            
+
         # 计算 scons 执行时间
         execution_time = end_time - start_time
         print(f"scons 执行时间: {execution_time:.2f} 秒")
@@ -89,7 +89,7 @@ def build_bsp(bsp, scons_args=''):
         # 获取 scons 执行期间的 CPU 使用率
         # 这里我们取 scons 执行时间作为 interval，但需要注意 interval 最小为 0.1 秒
         interval = max(0.1, execution_time)
-        cpu_percent = psutil.cpu_percent(interval=interval)
+        cpu_percent = psutil.cpu_percent(interval=interval,percpu=True)
         print(f"scons 执行期间的 CPU 使用率: {cpu_percent}%")
 
     os.chdir(f'{rtt_root}/bsp/{bsp}')
