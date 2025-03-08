@@ -422,6 +422,7 @@ jobs:
           chmod 777 install_ubuntu.sh
           ./install_ubuntu.sh
           pip install -r tools/requirements.txt
+          pip install psutil
           git config --global http.postBuffer 524288000
           echo "RTT_ROOT=${{ github.workspace }}" >> $GITHUB_ENV
           echo "RTT_CC=gcc" >> $GITHUB_ENV
