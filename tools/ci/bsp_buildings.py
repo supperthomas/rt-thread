@@ -3,6 +3,10 @@ import shutil
 import re
 import multiprocessing
 import yaml
+import psutil
+import time
+import threading
+
 
 def add_summary(text):
     """
@@ -67,11 +71,26 @@ def build_bsp(bsp, scons_args=''):
 
         nproc = multiprocessing.cpu_count()
         os.chdir(rtt_root)
+
         cmd = f'scons -C bsp/{bsp} -j{nproc} {scons_args}'
+       # 记录 scons 开始时间
+        start_time = time.time()
         __, res = run_cmd(cmd, output_info=True)
+       # 记录 scons 结束时间
+        end_time = time.time()
 
         if res != 0:
             success = False
+            
+        # 计算 scons 执行时间
+        execution_time = end_time - start_time
+        print(f"scons 执行时间: {execution_time:.2f} 秒")
+
+        # 获取 scons 执行期间的 CPU 使用率
+        # 这里我们取 scons 执行时间作为 interval，但需要注意 interval 最小为 0.1 秒
+        interval = max(0.1, execution_time)
+        cpu_percent = psutil.cpu_percent(interval=interval)
+        print(f"scons 执行期间的 CPU 使用率: {cpu_percent}%")
 
     os.chdir(f'{rtt_root}/bsp/{bsp}')
     run_cmd('scons -c', output_info=False)
