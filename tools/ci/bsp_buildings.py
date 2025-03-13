@@ -85,6 +85,7 @@ def build_bsp(bsp, scons_args=''):
         # 计算 scons 执行时间
         execution_time = end_time - start_time
         print(f"scons 执行时间: {execution_time:.2f} 秒")
+        add_summary(f'cons 执行时间: {execution_time:.2f} 秒')
 
         # 获取 scons 执行期间的 CPU 使用率
         # 这里我们取 scons 执行时间作为 interval，但需要注意 interval 最小为 0.1 秒
