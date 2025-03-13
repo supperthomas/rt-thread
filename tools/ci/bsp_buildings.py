@@ -39,9 +39,8 @@ def run_cmd(cmd, output_info=True):
 
     return output_str_list, res
 
-global execution_time
-
 def build_bsp(bsp, scons_args=''):
+    global execution_time
     """
     build bsp.
 
@@ -246,7 +245,7 @@ if __name__ == "__main__":
                     add_summary(f'\t- ❌ build {bsp} {name} failed.')
                     failed += 1
                 else:
-                    add_summary(f'\t- ✅ build {bsp} {name} success.execution_time {execution_time}')
+                    add_summary(f'\t- ✅ build {bsp} {name} success. {}')
                 print("::endgroup::")
 
                 shutil.copyfile(config_bacakup, config_file)
@@ -270,7 +269,7 @@ if __name__ == "__main__":
                 add_summary(f'\t- ❌ build {attach_file} failed.')
                 failed += 1
             else:
-                add_summary(f'\t- ✅ build {attach_file} success. execution_time {execution_time}')
+                add_summary(f'\t- ✅ build {attach_file} success.  {}')
             print("::endgroup::")
 
     exit(failed)
