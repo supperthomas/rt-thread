@@ -41,7 +41,7 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     name: ${{ matrix.legs.RTT_BSP }}
-    if: github.repository_owner == 'RT-Thread'
+    #if: github.repository_owner == 'RT-Thread'
     strategy:
       fail-fast: false
       matrix:
@@ -559,3 +559,19 @@ jobs:
           curl -X POST -H "Authorization: token ${{ secrets.RTTHREAD_GITHUB_TOKEN }}" \
           -d '{"body":"@${{ github.actor }}, Thank you for your contribution, but there was an error with the action. Could you please help check the BSP compilation issue? Thank you."}' \
           "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
+  # cd for test ouput
+  collect-artifacts:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      #这里会下载所有产物
+      - name: Download all artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: combined-output
+        
+      - name: Upload combined output as artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: all_bsp_output
+          path: combined-output/
