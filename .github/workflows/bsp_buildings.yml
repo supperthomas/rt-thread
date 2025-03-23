@@ -34,8 +34,8 @@ on:
       - online-pkgs-static-building-trigger-event
   workflow_dispatch:
 
-permissions:
-  contents: read # to fetch code (actions/checkout)
+permissions: write-all
+permissions: read-all
 
 jobs:
   build:
@@ -188,24 +188,7 @@ jobs:
       - name: Post failure comment
         if: failure()
         run: |
-          curl -X POST -H "Authorization: token ${{ secrets.RTTHREAD_GITHUB_TOKEN }}" \
+          curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
           -d '{"body":"@${{ github.actor }}, Thank you for your contribution, but there was an error with the action. Could you please help check the BSP compilation issue? Thank you."}' \
           "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
-  # cd for test ouput
-  collect-artifacts:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      #这里会下载所有产物
-      - name: Download all artifacts
-        uses: actions/download-artifact@main
-        with:
-          path: output/
-          merge-multiple: true
-      - run: ls -R output/
-        
-      - name: Upload combined output as artifact
-        uses: actions/upload-artifact@main
-        with:
-          name: 00_all_bsp_output_${{ github.sha.slice(0, 7) }}
-          path: output/
+
