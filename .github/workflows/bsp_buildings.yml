@@ -46,26 +46,10 @@ jobs:
       fail-fast: false
       matrix:
        legs:
-         -  RTT_BSP: "RT-Thread Online Packages (STM32F407 RT-Spark)"
-            RTT_TOOL_CHAIN: "sourcery-arm"
-            SUB_RTT_BSP:
-                - "stm32/stm32f407-rt-spark"
-         -  RTT_BSP: "RTduino_Arduino Libraries (STM32F412 Nucleo)"
-            RTT_TOOL_CHAIN: "sourcery-arm"
-            SUB_RTT_BSP:
-                - "stm32/stm32f412-st-nucleo"
-         -  RTT_BSP: "RTduino_Arduino Libraries (Raspberry Pico)"
-            RTT_TOOL_CHAIN: "sourcery-arm"
-            SUB_RTT_BSP:
-                - "raspberry-pico"
          -  RTT_BSP: "nordic(yml)"
             RTT_TOOL_CHAIN: "sourcery-arm"
             SUB_RTT_BSP:
-                - "nrf5x/nrf51822"
-                - "nrf5x/nrf52832"
-                - "nrf5x/nrf52833"
                 - "nrf5x/nrf52840"
-                - "nrf5x/nrf5340"
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -223,5 +207,5 @@ jobs:
       - name: Upload combined output as artifact
         uses: actions/upload-artifact@main
         with:
-          name: all_bsp_output
+          name: 00_all_bsp_output_${{ github.sha }}
           path: output/
