@@ -53,7 +53,7 @@ else:
 BUILD = 'flash_debug'
 
 if PLATFORM == 'gcc':
-    PREFIX = 'riscv32-unknown-elf-'
+    PREFIX = 'riscv-none-embed-'
     CC = PREFIX + 'gcc'
     CXX = PREFIX + 'g++'
     AS = PREFIX + 'gcc'
