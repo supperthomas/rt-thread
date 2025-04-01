@@ -143,7 +143,7 @@ jobs:
         if: ${{ matrix.legs.RTT_TOOL_CHAIN == 'sourcery-arm'}}
         shell: bash
         run: |
-          /opt/arm-gnu-toolchain-13.2.Rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gcc --version
+          /opt/arm-gnu-toolchain-13.2.Rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gcc -v
           echo "RTT_EXEC_PATH=/opt/arm-gnu-toolchain-13.2.Rel1-x86_64-arm-none-eabi/bin" >> $GITHUB_ENV
 
       - name: Install LLVM-Arm ToolChains
@@ -153,7 +153,7 @@ jobs:
           wget -q https://github.com/ARM-software/LLVM-embedded-toolchain-for-Arm/releases/download/release-16.0.0/LLVMEmbeddedToolchainForArm-16.0.0-Linux-x86_64.tar.gz
           sudo tar zxf LLVMEmbeddedToolchainForArm-16.0.0-Linux-x86_64.tar.gz -C /opt
           sudo apt-get -qq install libncurses5 libncurses5-dev libncursesw5-dev
-          /opt/LLVMEmbeddedToolchainForArm-16.0.0-Linux-x86_64/bin/clang --version
+          /opt/LLVMEmbeddedToolchainForArm-16.0.0-Linux-x86_64/bin/clang -v
           echo "RTT_CC=llvm-arm" >> $GITHUB_ENV
           echo "RTT_EXEC_PATH=/opt/LLVMEmbeddedToolchainForArm-16.0.0-Linux-x86_64/bin" >> $GITHUB_ENV
 
@@ -163,7 +163,7 @@ jobs:
         run: |
           wget -q https://github.com/RT-Thread/toolchains-ci/releases/download/v1.6/gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf.tar.xz
           sudo tar -xf gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf.tar.xz -C /opt
-          /opt/gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf/bin/aarch64-none-elf-gcc --version
+          /opt/gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf/bin/aarch64-none-elf-gcc -v
           echo "RTT_EXEC_PATH=/opt/gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf/bin" >> $GITHUB_ENV
 
       - name: Install Mips ToolChains
@@ -172,7 +172,7 @@ jobs:
         run: |
           wget -q https://github.com/RT-Thread/toolchains-ci/releases/download/v1.1/mips-2016.05-7-mips-sde-elf-i686-pc-linux-gnu.tar.bz2
           sudo tar xjf mips-2016.05-7-mips-sde-elf-i686-pc-linux-gnu.tar.bz2 -C /opt
-          /opt/mips-2016.05/bin/mips-sde-elf-gcc --version
+          /opt/mips-2016.05/bin/mips-sde-elf-gcc -v
           echo "RTT_EXEC_PATH=/opt/mips-2016.05/bin" >> $GITHUB_ENV
 
       - name: Install Riscv64-unknown-elf ToolChains
@@ -180,7 +180,7 @@ jobs:
         run: |
           wget -q https://github.com/RT-Thread/toolchains-ci/releases/download/v1.4/riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14.tar.gz
           sudo tar zxf riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14.tar.gz -C /opt
-          /opt/riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14/bin/riscv64-unknown-elf-gcc --version
+          /opt/riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14/bin/riscv64-unknown-elf-gcc -v
           echo "RTT_EXEC_PATH=/opt/riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14/bin" >> $GITHUB_ENV
 
       - name: Install riscv32-unknown-elf Toolchains
@@ -188,7 +188,7 @@ jobs:
         run: |
            wget -q https://github.com/hpmicro/riscv-gnu-toolchain/releases/download/2022.05.15/riscv32-unknown-elf-newlib-multilib_2022.05.15_linux.tar.gz
            sudo tar zxf riscv32-unknown-elf-newlib-multilib_2022.05.15_linux.tar.gz -C /opt
-           /opt/riscv32-unknown-elf-newlib-multilib/bin/riscv32-unknown-elf-gcc --version
+           /opt/riscv32-unknown-elf-newlib-multilib/bin/riscv32-unknown-elf-gcc -v
            echo "RTT_EXEC_PATH=/opt/riscv32-unknown-elf-newlib-multilib/bin/" >> $GITHUB_ENV
 
       - name: Install Riscv-none-embed ToolChains
@@ -196,7 +196,7 @@ jobs:
         run: |
           wget -q https://github.com/RT-Thread/toolchains-ci/releases/download/v1.5/xpack-riscv-none-embed-gcc-8.3.0-2.3-linux-x64.tar.gz
           sudo tar zxf xpack-riscv-none-embed-gcc-8.3.0-2.3-linux-x64.tar.gz -C /opt
-          /opt/xpack-riscv-none-embed-gcc-8.3.0-2.3/bin/riscv-none-embed-gcc --version
+          /opt/xpack-riscv-none-embed-gcc-8.3.0-2.3/bin/riscv-none-embed-gcc -v
           echo "RTT_EXEC_PATH=/opt/xpack-riscv-none-embed-gcc-8.3.0-2.3/bin" >> $GITHUB_ENV
 
       - name: Install riscv32-esp-elf ToolChains
@@ -204,7 +204,7 @@ jobs:
         run: |
           wget -q https://github.com/espressif/crosstool-NG/releases/download/esp-2022r1-RC1/riscv32-esp-elf-gcc11_2_0-esp-2022r1-RC1-linux-amd64.tar.xz
           sudo tar xf riscv32-esp-elf-gcc11_2_0-esp-2022r1-RC1-linux-amd64.tar.xz -C /opt
-          /opt/riscv32-esp-elf/bin/riscv32-esp-elf-gcc --version
+          /opt/riscv32-esp-elf/bin/riscv32-esp-elf-gcc -v
           pip3 install esptool
           echo "RTT_EXEC_PATH=/opt/riscv32-esp-elf/bin" >> $GITHUB_ENV
 
@@ -218,7 +218,7 @@ jobs:
         run: |
           wget -q https://github.com/zhkag/toolchains/releases/download/i386-unknown/i386-unknown-elf_for_x86_64-pc-linux-gnu_latest.tar.bz2
           sudo tar -jxvf i386-unknown-elf_for_x86_64-pc-linux-gnu_latest.tar.bz2 -C /opt
-          /opt/i386-unknown-elf_for_x86_64-pc-linux-gnu/bin/i386-unknown-elf-gcc --version
+          /opt/i386-unknown-elf_for_x86_64-pc-linux-gnu/bin/i386-unknown-elf-gcc -v
           echo "RTT_EXEC_PATH=/opt/i386-unknown-elf_for_x86_64-pc-linux-gnu/bin" >> $GITHUB_ENV
 
       - name: Bsp Scons Compile
