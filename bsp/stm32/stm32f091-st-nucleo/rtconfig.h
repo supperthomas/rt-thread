@@ -6,7 +6,7 @@
 
 #define SOC_STM32F091RC
 #define BOARD_STM32F091_NUCLEO
-
+   
 /* RT-Thread Kernel */
 
 #define RT_NAME_MAX 8
@@ -21,7 +21,7 @@
 #define RT_USING_IDLE_HOOK
 #define RT_IDLE_HOOK_LIST_SIZE 4
 #define IDLE_THREAD_STACK_SIZE 256
-
+   
 /* kservice optimization */
 
 #define RT_USING_DEBUG
