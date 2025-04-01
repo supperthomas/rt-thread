@@ -49,6 +49,10 @@ if  CROSS_TOOL == 'gcc':
         EXEC_PATH   = r'/opt/riscv-gnu-gcc/bin'
 else:
     print("CROSS_TOOL = {} not yet supported" % CROSS_TOOL)
+    
+if os.getenv('RTT_EXEC_PATH'):
+    EXEC_PATH = os.getenv('RTT_EXEC_PATH')
+EXEC_PATH = os.path.expanduser(EXEC_PATH)
 
 BUILD = 'flash_debug'
 
